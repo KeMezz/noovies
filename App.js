@@ -5,11 +5,17 @@ import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { View, Text } from "react-native";
 import { useCallback } from "react";
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  DarkTheme,
+  DefaultTheme,
+} from "@react-navigation/native";
 import Tabs from "./navigation/Tabs";
+import { useColorScheme } from "react-native";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const isDark = useColorScheme() === "dark";
   useEffect(() => {
     const prepare = async () => {
       try {
@@ -35,7 +41,10 @@ export default function App() {
     return null;
   } else {
     return (
-      <NavigationContainer onReady={onLayoutRootView}>
+      <NavigationContainer
+        onReady={onLayoutRootView}
+        theme={isDark ? DarkTheme : DefaultTheme}
+      >
         <Tabs />
       </NavigationContainer>
     );
