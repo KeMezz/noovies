@@ -1,21 +1,43 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import * as SplashScreen from "expo-splash-screen";
+import { useState, useEffect } from "react";
+import * as Font from "expo-font";
+import { Ionicons } from "@expo/vector-icons";
+import { View, Text } from "react-native";
+import { useCallback } from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import Tabs from "./navigation/Tabs";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [appIsReady, setAppIsReady] = useState(false);
+  useEffect(() => {
+    const prepare = async () => {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await Font.loadAsync(Ionicons.font);
+      } catch (error) {
+        console.warn(error);
+      } finally {
+        setAppIsReady(true);
+      }
+    };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  } else {
+    return (
+      <NavigationContainer onReady={onLayoutRootView}>
+        <Tabs />
+      </NavigationContainer>
+    );
+  }
+}
