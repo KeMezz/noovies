@@ -3,7 +3,6 @@ import * as SplashScreen from "expo-splash-screen";
 import { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text } from "react-native";
 import { useCallback } from "react";
 import {
   NavigationContainer,
@@ -12,6 +11,7 @@ import {
 } from "@react-navigation/native";
 import Tabs from "./navigation/Tabs";
 import { useColorScheme } from "react-native";
+import Stack from "./navigation/Stack";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -27,7 +27,6 @@ export default function App() {
         setAppIsReady(true);
       }
     };
-
     prepare();
   }, []);
 
@@ -45,7 +44,7 @@ export default function App() {
         onReady={onLayoutRootView}
         theme={isDark ? DarkTheme : DefaultTheme}
       >
-        <Tabs />
+        <Stack />
       </NavigationContainer>
     );
   }

@@ -1,16 +1,9 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { useColorScheme } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import Movie from "../screens/Movie";
 import Search from "../screens/Search";
 import TV from "../screens/TV";
-import { useColorScheme } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  BLACK_COLOR,
-  DARK_GREY,
-  LIGHT_GREY,
-  WHITE_COLOR,
-  YELLOW_COLOR,
-} from "../styles/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,6 +13,7 @@ function Tabs() {
     <Tab.Navigator
       screenOptions={{
         tabBarLabelStyle: { marginTop: -5 },
+        //   CUSTOM COLORS
         //   tabBarStyle: { backgroundColor: isDark ? BLACK_COLOR : WHITE_COLOR },
         //   tabBarActiveTintColor: YELLOW_COLOR,
         //   tabBarInactiveTintColor: isDark ? LIGHT_GREY : DARK_GREY,
