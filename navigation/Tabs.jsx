@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Movie from "../screens/Movie";
+import Movies from "../screens/Movies";
 import Search from "../screens/Search";
 import TV from "../screens/TV";
 import {
@@ -29,7 +29,7 @@ function Tabs() {
     >
       <Tab.Screen
         name="Movies"
-        component={Movie}
+        component={Movies}
         options={{
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="film" color={color} size={size} />;
