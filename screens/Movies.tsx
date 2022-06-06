@@ -1,7 +1,10 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 import styled from "styled-components/native";
 
-function Movies({ navigation: { navigate } }) {
+function Movies({
+  navigation: { navigate },
+}: NativeStackScreenProps<any, "Movies">) {
   return (
     <Btn onPress={() => navigate("Stack", { screen: "Three" })}>
       <Title>Movies</Title>
