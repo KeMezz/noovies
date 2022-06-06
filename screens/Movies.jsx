@@ -13,11 +13,13 @@ const Btn = styled.TouchableOpacity`
   flex: 1;
   justify-content: center;
   align-items: center;
+  background-color: ${(props) => props.theme.mainBgColor};
 `;
 
 const Title = styled.Text`
   font-size: 36px;
   font-weight: bold;
+  color: ${(props) => props.theme.textColor};
 `;
 
 export default Movies;

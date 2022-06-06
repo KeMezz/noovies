@@ -4,13 +4,15 @@ import { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback } from "react";
-// import { useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Root from "./navigation/Root";
+import { useColorScheme } from "react-native";
+import { ThemeProvider } from "styled-components";
+import { darkTheme, lightTheme } from "./styles/styled";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-  // const isDark = useColorScheme() === "dark";
+  const isDark = useColorScheme() === "dark";
   useEffect(() => {
     const prepare = async () => {
       try {
@@ -35,9 +37,11 @@ export default function App() {
     return null;
   } else {
     return (
-      <NavigationContainer onReady={onLayoutRootView}>
-        <Root />
-      </NavigationContainer>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <NavigationContainer onReady={onLayoutRootView}>
+          <Root />
+        </NavigationContainer>
+      </ThemeProvider>
     );
   }
 }
