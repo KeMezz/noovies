@@ -4,18 +4,13 @@ import { useState, useEffect } from "react";
 import * as Font from "expo-font";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback } from "react";
-import {
-  NavigationContainer,
-  DarkTheme,
-  DefaultTheme,
-} from "@react-navigation/native";
-import Tabs from "./navigation/Tabs";
-import { useColorScheme } from "react-native";
-import Stack from "./navigation/Stack";
+// import { useColorScheme } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import Root from "./navigation/Root";
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-  const isDark = useColorScheme() === "dark";
+  // const isDark = useColorScheme() === "dark";
   useEffect(() => {
     const prepare = async () => {
       try {
@@ -40,11 +35,8 @@ export default function App() {
     return null;
   } else {
     return (
-      <NavigationContainer
-        onReady={onLayoutRootView}
-        theme={isDark ? DarkTheme : DefaultTheme}
-      >
-        <Stack />
+      <NavigationContainer onReady={onLayoutRootView}>
+        <Root />
       </NavigationContainer>
     );
   }
