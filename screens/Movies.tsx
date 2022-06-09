@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import Swiper from "react-native-web-swiper";
-import { ActivityIndicator, Dimensions } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { makeImagePath } from "../utils/makeImagePath";
+import { BlurView } from "expo-blur";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -37,10 +39,14 @@ function Movies({
         controlsEnabled={false}
         containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
       >
-        <View style={{ backgroundColor: "red" }} />
-        <View style={{ backgroundColor: "blue" }} />
-        <View style={{ backgroundColor: "orange" }} />
-        <View style={{ backgroundColor: "teal" }} />
+        {nowPlayingMovies.map((movie) => (
+          <View key={movie.id}>
+            <BgImg source={{ uri: makeImagePath(movie.backdrop_path) }} />
+            <BlurView intensity={100} style={StyleSheet.absoluteFill}>
+              <Title>{movie.original_title}</Title>
+            </BlurView>
+          </View>
+        ))}
       </Swiper>
     </Container>
   );
@@ -51,13 +57,21 @@ const Loader = styled.View`
   justify-content: center;
   align-items: center;
 `;
-
 const Container = styled.ScrollView`
   background-color: ${(props) => props.theme.mainBgColor};
 `;
-
 const View = styled.View`
   flex: 1;
+`;
+const BgImg = styled.Image`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+`;
+const Title = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
+  padding: 0 20px;
 `;
 
 export default Movies;
