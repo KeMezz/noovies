@@ -22,17 +22,13 @@ function Movies({
 
   const getNowPlaying = async () => {
     const { results } = await (
-      await fetch(
-        `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=en-US&page=1&region=KR`
-      )
+      await fetch(`${BASE_URL}/movie/now_playing?api_key=${API_KEY}`)
     ).json();
     setNowPlayingMovies(results);
   };
   const getUpComing = async () => {
     const { results } = await (
-      await fetch(
-        `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=en-US&page=1&region=KR`
-      )
+      await fetch(`${BASE_URL}/movie/upcoming?api_key=${API_KEY}`)
     ).json();
     setUpcomingMovies(results);
   };
@@ -80,23 +76,43 @@ function Movies({
         ))}
       </Swiper>
       <ListTitle>Trending Movies</ListTitle>
-      <TrendingView
+      <TrendingScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={{ paddingLeft: 24, paddingRight: 12 }}
       >
         {trendingMovies.map((movie) => (
-          <Movie key={movie.id}>
+          <TrendingCard key={movie.id}>
             <Poster posterPath={movie.poster_path} />
-            <MovieTitle numberOfLines={1}>{movie.title}</MovieTitle>
+            <TrendingTitle numberOfLines={1}>{movie.title}</TrendingTitle>
             <Votes
               voteCount={movie.vote_count}
               voteAverage={movie.vote_average}
               marginTop="3px"
             />
-          </Movie>
+          </TrendingCard>
         ))}
-      </TrendingView>
+      </TrendingScrollView>
+
+      <ListTitle>Comming Soon</ListTitle>
+      {upcomingMovies.map((movie) => (
+        <UpcomingMovie key={movie.id}>
+          <Poster posterPath={movie.poster_path} />
+          <MovieInfo>
+            <UpcomingTitle numberOfLines={2}>{movie.title}</UpcomingTitle>
+            {movie.overview ? (
+              <Overview numberOfLines={4}>{movie.overview}</Overview>
+            ) : null}
+            <ReleaseDate>
+              {new Date(movie.release_date).toLocaleDateString("ko", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </ReleaseDate>
+          </MovieInfo>
+        </UpcomingMovie>
+      ))}
     </Container>
   );
 }
@@ -114,18 +130,47 @@ const ListTitle = styled.Text`
   font-size: 18px;
   font-weight: bold;
   margin-left: 24px;
-  margin-top: 30px;
+  margin-top: 34px;
   margin-bottom: 14px;
 `;
-const TrendingView = styled.ScrollView``;
-const Movie = styled.View`
+const TrendingScrollView = styled.ScrollView``;
+const TrendingCard = styled.View`
   margin-right: 12px;
   align-items: center;
   width: 100px;
 `;
-const MovieTitle = styled.Text`
+const TrendingTitle = styled.Text`
   color: ${(props) => props.theme.textColor};
   margin-top: 5px;
+`;
+
+const UpcomingMovie = styled.View`
+  padding: 0 24px;
+  flex-direction: row;
+  flex: 1;
+  margin-bottom: 14px;
+`;
+const MovieInfo = styled.View`
+  padding: 16px;
+  flex: 1;
+  justify-content: center;
+  width: 70%;
+`;
+const UpcomingTitle = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 20px;
+`;
+const Overview = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  opacity: 0.8;
+  margin-top: 4px;
+`;
+const ReleaseDate = styled(Overview)`
+  font-size: 10px;
+  opacity: 1;
+  margin-top: 6px;
 `;
 
 export default Movies;
