@@ -4,6 +4,7 @@ import { BlurView } from "expo-blur";
 import { StyleSheet, useColorScheme } from "react-native";
 import { makeImagePath } from "../utils/makeImagePath";
 import Poster from "./Poster";
+import Votes from "./Votes";
 
 interface SlideProps {
   backdropPath: string;
@@ -37,7 +38,11 @@ function Slide({
             {overview ? (
               <Overview numberOfLines={4}>{overview}</Overview>
             ) : null}
-            {voteCount > 0 ? <Votes>⭐️ {voteAverage} / 10</Votes> : null}
+            <Votes
+              voteCount={voteCount}
+              voteAverage={voteAverage}
+              marginTop="8px"
+            />
           </MovieInfo>
           <Poster posterPath={posterPath} />
         </SwiperMovie>
@@ -73,10 +78,6 @@ const Overview = styled.Text`
   color: ${(props) => props.theme.textColor};
   opacity: 0.7;
   margin-top: 8px;
-`;
-const Votes = styled(Overview)`
-  opacity: 1;
-  font-size: 12px;
 `;
 
 export default Slide;

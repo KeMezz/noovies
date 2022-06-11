@@ -4,6 +4,8 @@ import Swiper from "react-native-swiper";
 import { ActivityIndicator, Dimensions } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Slide from "../components/Slide";
+import Poster from "../components/Poster";
+import Votes from "../components/Votes";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -77,6 +79,24 @@ function Movies({
           />
         ))}
       </Swiper>
+      <ListTitle>Trending Movies</ListTitle>
+      <TrendingView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingLeft: 24, paddingRight: 12 }}
+      >
+        {trendingMovies.map((movie) => (
+          <Movie key={movie.id}>
+            <Poster posterPath={movie.poster_path} />
+            <MovieTitle numberOfLines={1}>{movie.title}</MovieTitle>
+            <Votes
+              voteCount={movie.vote_count}
+              voteAverage={movie.vote_average}
+              marginTop="3px"
+            />
+          </Movie>
+        ))}
+      </TrendingView>
     </Container>
   );
 }
@@ -88,6 +108,24 @@ const Loader = styled.View`
 `;
 const Container = styled.ScrollView`
   background-color: ${(props) => props.theme.mainBgColor};
+`;
+const ListTitle = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  font-size: 18px;
+  font-weight: bold;
+  margin-left: 24px;
+  margin-top: 30px;
+  margin-bottom: 14px;
+`;
+const TrendingView = styled.ScrollView``;
+const Movie = styled.View`
+  margin-right: 12px;
+  align-items: center;
+  width: 100px;
+`;
+const MovieTitle = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  margin-top: 5px;
 `;
 
 export default Movies;
