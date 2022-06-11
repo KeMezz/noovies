@@ -86,21 +86,22 @@ function Movies({
         ))}
       </Swiper>
       <ListTitle>Trending Movies</ListTitle>
-      <TrendingScrollView
+      <TrendingFlatList
         horizontal
+        data={trendingMovies}
+        keyExtractor={(item) => item.id + ""}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingLeft: 24, paddingRight: 12 }}
-      >
-        {trendingMovies.map((movie) => (
+        contentContainerStyle={{ paddingHorizontal: 24 }}
+        ItemSeparatorComponent={() => <Separator />}
+        renderItem={({ item }) => (
           <VMedia
-            key={movie.id}
-            posterPath={movie.poster_path}
-            title={movie.title}
-            voteCount={movie.vote_count}
-            voteAverage={movie.vote_average}
+            posterPath={item.poster_path}
+            title={item.title}
+            voteCount={item.vote_count}
+            voteAverage={item.vote_average}
           />
-        ))}
-      </TrendingScrollView>
+        )}
+      />
 
       <ListTitle>Comming Soon</ListTitle>
       {upcomingMovies.map((movie) => (
@@ -132,6 +133,9 @@ const ListTitle = styled.Text`
   margin-top: 34px;
   margin-bottom: 14px;
 `;
-const TrendingScrollView = styled.ScrollView``;
+const TrendingFlatList = styled.FlatList``;
+const Separator = styled.View`
+  width: 12px;
+`;
 
 export default Movies;

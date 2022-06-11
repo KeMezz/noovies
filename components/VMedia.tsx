@@ -21,13 +21,13 @@ function VMedia({ posterPath, title, voteCount, voteAverage }: VMedia) {
 }
 
 const Container = styled.View`
-  margin-right: 12px;
   align-items: center;
   width: 100px;
 `;
 const Title = styled.Text`
   color: ${(props) => props.theme.textColor};
-  margin-top: 5px;
+  margin-top: 8px;
+  font-weight: bold;
 `;
 
 export default VMedia;
