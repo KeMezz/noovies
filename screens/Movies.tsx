@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
-import { ActivityIndicator, Dimensions } from "react-native";
+import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Slide from "../components/Slide";
-import Poster from "../components/Poster";
-import Votes from "../components/Votes";
+import SlideMedia from "../components/SlideMedia";
+import VMedia from "../components/VMedia";
+import HMedia from "../components/HMedia";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -16,6 +16,7 @@ function Movies({
   navigation: { navigate },
 }: NativeStackScreenProps<any, "Movies">) {
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [upcomingMovies, setUpcomingMovies] = useState([]);
   const [trendingMovies, setTrendingMovies] = useState([]);
@@ -39,6 +40,11 @@ function Movies({
     setTrendingMovies(results);
   };
 
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getMoviesData();
+    setRefreshing(false);
+  };
   const getMoviesData = async () => {
     await Promise.all([getNowPlaying(), getUpComing(), getTrending()]);
     setLoading(false);
@@ -53,7 +59,11 @@ function Movies({
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container>
+    <Container
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Swiper
         horizontal
         loop
@@ -64,7 +74,7 @@ function Movies({
         containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
       >
         {nowPlayingMovies.map((movie) => (
-          <Slide
+          <SlideMedia
             key={movie.id}
             backdropPath={movie.backdrop_path}
             originalTitle={movie.original_title}
@@ -82,36 +92,25 @@ function Movies({
         contentContainerStyle={{ paddingLeft: 24, paddingRight: 12 }}
       >
         {trendingMovies.map((movie) => (
-          <TrendingCard key={movie.id}>
-            <Poster posterPath={movie.poster_path} />
-            <TrendingTitle numberOfLines={1}>{movie.title}</TrendingTitle>
-            <Votes
-              voteCount={movie.vote_count}
-              voteAverage={movie.vote_average}
-              marginTop="3px"
-            />
-          </TrendingCard>
+          <VMedia
+            key={movie.id}
+            posterPath={movie.poster_path}
+            title={movie.title}
+            voteCount={movie.vote_count}
+            voteAverage={movie.vote_average}
+          />
         ))}
       </TrendingScrollView>
 
       <ListTitle>Comming Soon</ListTitle>
       {upcomingMovies.map((movie) => (
-        <UpcomingMovie key={movie.id}>
-          <Poster posterPath={movie.poster_path} />
-          <MovieInfo>
-            <UpcomingTitle numberOfLines={2}>{movie.title}</UpcomingTitle>
-            {movie.overview ? (
-              <Overview numberOfLines={4}>{movie.overview}</Overview>
-            ) : null}
-            <ReleaseDate>
-              {new Date(movie.release_date).toLocaleDateString("ko", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </ReleaseDate>
-          </MovieInfo>
-        </UpcomingMovie>
+        <HMedia
+          key={movie.id}
+          posterPath={movie.poster_path}
+          title={movie.title}
+          overview={movie.overview}
+          releaseDate={movie.release_date}
+        />
       ))}
     </Container>
   );
@@ -134,43 +133,5 @@ const ListTitle = styled.Text`
   margin-bottom: 14px;
 `;
 const TrendingScrollView = styled.ScrollView``;
-const TrendingCard = styled.View`
-  margin-right: 12px;
-  align-items: center;
-  width: 100px;
-`;
-const TrendingTitle = styled.Text`
-  color: ${(props) => props.theme.textColor};
-  margin-top: 5px;
-`;
-
-const UpcomingMovie = styled.View`
-  padding: 0 24px;
-  flex-direction: row;
-  flex: 1;
-  margin-bottom: 14px;
-`;
-const MovieInfo = styled.View`
-  padding: 16px;
-  flex: 1;
-  justify-content: center;
-  width: 70%;
-`;
-const UpcomingTitle = styled.Text`
-  color: ${(props) => props.theme.textColor};
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 20px;
-`;
-const Overview = styled.Text`
-  color: ${(props) => props.theme.textColor};
-  opacity: 0.8;
-  margin-top: 4px;
-`;
-const ReleaseDate = styled(Overview)`
-  font-size: 10px;
-  opacity: 1;
-  margin-top: 6px;
-`;
 
 export default Movies;

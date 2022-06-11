@@ -6,7 +6,7 @@ import { makeImagePath } from "../utils/makeImagePath";
 import Poster from "./Poster";
 import Votes from "./Votes";
 
-interface SlideProps {
+interface SlideMediaProps {
   backdropPath: string;
   originalTitle: string;
   overview: string;
@@ -15,14 +15,14 @@ interface SlideProps {
   posterPath: string;
 }
 
-function Slide({
+function SlideMedia({
   backdropPath,
   originalTitle,
   overview,
   voteCount,
   voteAverage,
   posterPath,
-}: SlideProps) {
+}: SlideMediaProps) {
   const isDark = useColorScheme() === "dark";
   return (
     <Container>
@@ -80,4 +80,4 @@ const Overview = styled.Text`
   margin-top: 8px;
 `;
 
-export default Slide;
+export default SlideMedia;
