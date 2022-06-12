@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import { ActivityIndicator, Dimensions } from "react-native";
@@ -6,7 +6,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import SlideMedia from "../components/SlideMedia";
 import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { moviesAPI } from "../utils/api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -14,21 +14,27 @@ const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 function Movies({
   navigation: { navigate },
 }: NativeStackScreenProps<any, "Movies">) {
-  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
-    "nowPlaying",
-    moviesAPI.nowPlaying
-  );
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    "trending",
-    moviesAPI.trending
-  );
-  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
-    "upcoming",
-    moviesAPI.upcoming
-  );
+  const queryClient = useQueryClient();
+  const {
+    isLoading: nowPlayingLoading,
+    data: nowPlayingData,
+    isRefetching: nowPlayingRefetching,
+  } = useQuery(["movies", "nowPlaying"], moviesAPI.nowPlaying);
+  const {
+    isLoading: trendingLoading,
+    data: trendingData,
+    isRefetching: trendingRefetching,
+  } = useQuery(["movies", "trending"], moviesAPI.trending);
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    isRefetching: upcomingRefetching,
+  } = useQuery(["movies", "upcoming"], moviesAPI.upcoming);
 
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = async () => {};
+  const onRefresh = () => queryClient.refetchQueries(["movies"]);
+  const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
+  const refreshing =
+    nowPlayingRefetching || trendingRefetching || upcomingRefetching;
 
   const keyExtractor = (item) => item.id + "";
   const renderVMedia = ({ item }) => (
@@ -47,8 +53,6 @@ function Movies({
       releaseDate={item.release_date}
     />
   );
-
-  const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
 
   return loading ? (
     <Loader>
