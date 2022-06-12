@@ -21,7 +21,7 @@ function HMedia({
   voteAverage,
 }: HMedia) {
   return (
-    <UpcomingMovie>
+    <Container>
       <Poster posterPath={posterPath} />
       <MovieInfo>
         <UpcomingTitle numberOfLines={2}>{title}</UpcomingTitle>
@@ -39,15 +39,14 @@ function HMedia({
           <Votes voteCount={voteCount} voteAverage={voteAverage} />
         ) : null}
       </MovieInfo>
-    </UpcomingMovie>
+    </Container>
   );
 }
 
-const UpcomingMovie = styled.View`
+const Container = styled.View`
   padding: 0 24px;
   flex-direction: row;
   flex: 1;
-  margin-bottom: 14px;
 `;
 const MovieInfo = styled.View`
   padding-left: 16px;
