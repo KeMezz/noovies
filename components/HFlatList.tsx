@@ -1,20 +1,12 @@
 import React from "react";
-import { FlatList } from "react-native";
 import styled from "styled-components/native";
+import { FlatList } from "react-native";
+import { MediaResponse } from "../utils/api";
 import VMedia from "./VMedia";
 
 interface HFlatListProps {
   title: string;
-  data: {
-    results: {
-      id: number;
-      poster_path: string;
-      title?: string;
-      name?: string;
-      vote_count: number;
-      vote_average: number;
-    }[];
-  };
+  data?: MediaResponse;
 }
 
 function HFlatList({ title, data }: HFlatListProps) {
@@ -27,10 +19,11 @@ function HFlatList({ title, data }: HFlatListProps) {
         data={data?.results}
         renderItem={({ item }) => (
           <VMedia
-            posterPath={item.poster_path}
+            posterPath={item.poster_path || ""}
             title={item.title ?? item.name ?? ""}
             voteCount={item.vote_count}
             voteAverage={item.vote_average}
+            fullData={item}
           />
         )}
         ItemSeparatorComponent={HSeparator}
@@ -53,6 +46,13 @@ export const ListTitle = styled.Text`
 const HSeparator = styled.View`
   flex: 1;
   width: 12px;
+`;
+
+const NoResults = styled.Text`
+  color: ${(props) => props.theme.textColor};
+  padding: 18px;
+  padding-bottom: 40px;
+  text-align: center;
 `;
 
 export default HFlatList;

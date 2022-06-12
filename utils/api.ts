@@ -7,25 +7,30 @@ interface BaseResponse {
   total_results: number;
 }
 
-interface Movie {
-  adult: boolean;
+export interface iMedia {
+  adult?: boolean;
   backdrop_path: string | null;
   genre_ids: number[];
   id: number;
   original_language: string;
-  original_title: string;
+  original_title?: string;
+  original_name?: string;
+  origin_country?: string;
+  first_air_date?: string;
   overview: string;
   popularity: number;
   poster_path: string | null;
-  release_date: string;
-  title: string;
-  video: boolean;
+  release_date?: string;
+  title?: string;
+  name?: string;
+  video?: boolean;
   vote_average: number;
   vote_count: number;
+  media_type?: string;
 }
 
-export interface MovieResponse extends BaseResponse {
-  results: Movie[];
+export interface MediaResponse extends BaseResponse {
+  results: iMedia[];
 }
 
 export const moviesApi = {

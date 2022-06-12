@@ -1,15 +1,26 @@
-import React, { useLayoutEffect } from "react";
-import { Text, View } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import React, { useEffect } from "react";
 import styled from "styled-components/native";
+import Poster from "../components/Poster";
+import { iMedia } from "../utils/api";
+
+type RootStackParamList = {
+  Detail: iMedia;
+};
 
 function Detail({
   navigation: { setOptions },
-  route: {
-    params: { title },
-  },
-}) {
-  useLayoutEffect(() => setOptions({ title }), []);
-  return <Container></Container>;
+  route: { params },
+}: NativeStackScreenProps<RootStackParamList, "Detail">) {
+  useEffect(
+    () => setOptions({ title: "title" in params ? params.title : params.name }),
+    []
+  );
+  return (
+    <Container>
+      <Poster posterPath={params.poster_path || ""} />
+    </Container>
+  );
 }
 
 const Container = styled.ScrollView`

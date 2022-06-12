@@ -3,7 +3,7 @@ import Swiper from "react-native-swiper";
 import { Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQuery, useQueryClient } from "react-query";
-import { MovieResponse, moviesApi } from "../utils/api";
+import { MediaResponse, moviesApi } from "../utils/api";
 import Loader from "../components/Loader";
 import SlideMedia from "../components/SlideMedia";
 import HFlatList, { ListTitle } from "../components/HFlatList";
@@ -16,11 +16,11 @@ function Movies({
   navigation: { navigate },
 }: NativeStackScreenProps<any, "Movies">) {
   const { isLoading: nowPlayingLoading, data: nowPlayingData } =
-    useQuery<MovieResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
+    useQuery<MediaResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
   const { isLoading: trendingLoading, data: trendingData } =
-    useQuery<MovieResponse>(["movies", "trending"], moviesApi.trending);
+    useQuery<MediaResponse>(["movies", "trending"], moviesApi.trending);
   const { isLoading: upcomingLoading, data: upcomingData } =
-    useQuery<MovieResponse>(["movies", "upcoming"], moviesApi.upcoming);
+    useQuery<MediaResponse>(["movies", "upcoming"], moviesApi.upcoming);
 
   const queryClient = useQueryClient();
   const onRefresh = async () => {
@@ -52,11 +52,12 @@ function Movies({
               <SlideMedia
                 key={movie.id}
                 backdropPath={movie.backdrop_path || ""}
-                originalTitle={movie.original_title}
+                originalTitle={movie.original_title || ""}
                 overview={movie.overview}
                 voteCount={movie.vote_count}
                 voteAverage={movie.vote_average}
                 posterPath={movie.poster_path || ""}
+                fullData={movie}
               />
             ))}
           </Swiper>
@@ -66,10 +67,11 @@ function Movies({
       }
       renderItem={({ item }) => (
         <HMedia
-          title={item.title}
+          title={item?.title || ""}
           posterPath={item.poster_path || ""}
           overview={item.overview}
           releaseDate={item.release_date}
+          fullData={item}
         />
       )}
       data={upcomingData.results}

@@ -10,6 +10,7 @@ import { makeImagePath } from "../utils/makeImagePath";
 import Poster from "./Poster";
 import Votes from "./Votes";
 import { useNavigation } from "@react-navigation/native";
+import { iMedia } from "../utils/api";
 
 interface SlideMediaProps {
   backdropPath: string;
@@ -18,21 +19,23 @@ interface SlideMediaProps {
   voteCount: number;
   voteAverage: number;
   posterPath: string;
+  fullData: iMedia;
 }
 
 function SlideMedia({
   backdropPath,
-  originalTitle,
+  originalTitle: title,
   overview,
   voteCount,
   voteAverage,
   posterPath,
+  fullData,
 }: SlideMediaProps) {
   const isDark = useColorScheme() === "dark";
   const { navigate } = useNavigation();
   const goToDetail = () => {
     //@ts-ignore
-    navigate("Stack", { screen: "Detail", params: { originalTitle } });
+    navigate("Stack", { screen: "Detail", params: { ...fullData } });
   };
   return (
     <TouchableWithoutFeedback onPress={goToDetail}>
@@ -45,7 +48,7 @@ function SlideMedia({
         >
           <SwiperMovie>
             <MovieInfo>
-              <Title numberOfLines={1}>{originalTitle}</Title>
+              <Title numberOfLines={1}>{title}</Title>
               {overview ? (
                 <Overview numberOfLines={4}>{overview}</Overview>
               ) : null}

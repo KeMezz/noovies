@@ -40,7 +40,7 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="Tv"
+        name="TV"
         component={Tv}
         options={{
           tabBarIcon: ({ color, size }) => {

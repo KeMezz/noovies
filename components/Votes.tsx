@@ -10,7 +10,7 @@ interface VotesProps {
 function Votes({ voteCount, voteAverage, marginTop }: VotesProps) {
   return (
     <Text marginTop={marginTop ?? "0px"}>
-      {voteCount > 0 ? `⭐️ ${voteAverage} / 10` : "Coming Soon"}
+      {voteCount > 0 ? `⭐️ ${voteAverage} / 10` : "Not Rated"}
     </Text>
   );
 }

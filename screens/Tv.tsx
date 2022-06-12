@@ -1,23 +1,17 @@
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
-import { TvApi } from "../utils/api";
+import { MediaResponse, TvApi } from "../utils/api";
 import Loader from "../components/Loader";
 import { RefreshControl, ScrollView } from "react-native";
 import HFlatList from "../components/HFlatList";
 
 function Tv() {
-  const { isLoading: trendingLoading, data: trendingData } = useQuery(
-    ["tv", "trending"],
-    TvApi.trending
-  );
-  const { isLoading: airingTodayLoading, data: airingTodayData } = useQuery(
-    ["tv", "airingToday"],
-    TvApi.airingToday
-  );
-  const { isLoading: topRatedLoading, data: topRatedData } = useQuery(
-    ["tv", "topRated"],
-    TvApi.topRated
-  );
+  const { isLoading: trendingLoading, data: trendingData } =
+    useQuery<MediaResponse>(["tv", "trending"], TvApi.trending);
+  const { isLoading: airingTodayLoading, data: airingTodayData } =
+    useQuery<MediaResponse>(["tv", "airingToday"], TvApi.airingToday);
+  const { isLoading: topRatedLoading, data: topRatedData } =
+    useQuery<MediaResponse>(["tv", "topRated"], TvApi.topRated);
 
   const queryClient = useQueryClient();
   const onRefresh = () => {

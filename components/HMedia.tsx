@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
+import { iMedia } from "../utils/api";
 import Poster from "./Poster";
 import Votes from "./Votes";
 
@@ -11,6 +12,7 @@ interface HMedia {
   releaseDate?: string;
   voteCount?: number;
   voteAverage?: number;
+  fullData: iMedia;
 }
 
 function HMedia({
@@ -20,11 +22,12 @@ function HMedia({
   releaseDate,
   voteCount,
   voteAverage,
+  fullData,
 }: HMedia) {
   const { navigate } = useNavigation();
   const goToDetail = () => {
     //@ts-ignore
-    navigate("Stack", { screen: "Detail", params: { title } });
+    navigate("Stack", { screen: "Detail", params: { ...fullData } });
   };
   return (
     <Container onPress={goToDetail}>
