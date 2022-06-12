@@ -3,7 +3,7 @@ import { useColorScheme } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Movies from "../screens/Movies";
 import Search from "../screens/Search";
-import TV from "../screens/TV";
+import Tv from "../screens/Tv";
 import {
   BLACK_COLOR,
   WHITE_COLOR,
@@ -40,8 +40,8 @@ function Tabs() {
         }}
       />
       <Tab.Screen
-        name="TV"
-        component={TV}
+        name="Tv"
+        component={Tv}
         options={{
           tabBarIcon: ({ color, size }) => {
             return <Ionicons name="tv-outline" color={color} size={size} />;

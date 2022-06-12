@@ -8,9 +8,11 @@ interface VotesProps {
 }
 
 function Votes({ voteCount, voteAverage, marginTop }: VotesProps) {
-  return voteCount > 0 ? (
-    <Text marginTop={marginTop ?? "0px"}>⭐️ {voteAverage} / 10</Text>
-  ) : null;
+  return (
+    <Text marginTop={marginTop ?? "0px"}>
+      {voteCount > 0 ? `⭐️ ${voteAverage} / 10` : "Coming Soon"}
+    </Text>
+  );
 }
 
 const Text = styled.Text<{ marginTop: string }>`

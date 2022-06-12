@@ -1,13 +1,14 @@
 import React from "react";
-import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
-import { ActivityIndicator, Dimensions, FlatList } from "react-native";
+import { Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useQuery, useQueryClient } from "react-query";
-import { MovieResponse, moviesAPI } from "../utils/api";
+import { MovieResponse, moviesApi } from "../utils/api";
+import Loader from "../components/Loader";
 import SlideMedia from "../components/SlideMedia";
-import VMedia from "../components/VMedia";
+import HFlatList, { ListTitle } from "../components/HFlatList";
 import HMedia from "../components/HMedia";
+import VSeparator from "../components/VSeparator";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -18,17 +19,17 @@ function Movies({
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
     isRefetching: nowPlayingRefetching,
-  } = useQuery<MovieResponse>(["movies", "nowPlaying"], moviesAPI.nowPlaying);
+  } = useQuery<MovieResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
   const {
     isLoading: trendingLoading,
     data: trendingData,
     isRefetching: trendingRefetching,
-  } = useQuery<MovieResponse>(["movies", "trending"], moviesAPI.trending);
+  } = useQuery<MovieResponse>(["movies", "trending"], moviesApi.trending);
   const {
     isLoading: upcomingLoading,
     data: upcomingData,
     isRefetching: upcomingRefetching,
-  } = useQuery<MovieResponse>(["movies", "upcoming"], moviesAPI.upcoming);
+  } = useQuery<MovieResponse>(["movies", "upcoming"], moviesApi.upcoming);
 
   const queryClient = useQueryClient();
   const onRefresh = () => queryClient.refetchQueries(["movies"]);
@@ -37,12 +38,11 @@ function Movies({
   const refreshing =
     nowPlayingRefetching || trendingRefetching || upcomingRefetching;
 
-  return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
-  ) : upcomingData ? (
-    <UpcomingFlatList
+  if (loading) {
+    return <Loader />;
+  }
+  return upcomingData ? (
+    <FlatList
       ListHeaderComponent={
         <>
           <Swiper
@@ -66,25 +66,7 @@ function Movies({
               />
             ))}
           </Swiper>
-          <ListTitle>Trending Movies</ListTitle>
-          {trendingData ? (
-            <TrendingFlatList
-              horizontal
-              data={trendingData.results}
-              keyExtractor={(item) => item.id + ""}
-              showsHorizontalScrollIndicator={false}
-              ItemSeparatorComponent={HSeparator}
-              renderItem={({ item }) => (
-                <VMedia
-                  posterPath={item.poster_path || ""}
-                  title={item.title}
-                  voteCount={item.vote_count}
-                  voteAverage={item.vote_average}
-                />
-              )}
-              contentContainerStyle={{ paddingHorizontal: 18 }}
-            />
-          ) : null}
+          <HFlatList title="Trending Now" data={trendingData} />
           <ListTitle>Comming Soon</ListTitle>
         </>
       }
@@ -105,30 +87,5 @@ function Movies({
     />
   ) : null;
 }
-
-const TrendingFlatList = styled.FlatList`` as unknown as typeof FlatList;
-const UpcomingFlatList = styled.FlatList`` as unknown as typeof FlatList;
-
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
-const HSeparator = styled.View`
-  flex: 1;
-  width: 12px;
-`;
-const VSeparator = styled.View`
-  flex: 1;
-  height: 12px;
-`;
-const ListTitle = styled.Text`
-  color: ${(props) => props.theme.textColor};
-  font-size: 18px;
-  font-weight: bold;
-  margin-left: 18px;
-  margin-top: 34px;
-  margin-bottom: 14px;
-`;
 
 export default Movies;

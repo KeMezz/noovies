@@ -14,6 +14,7 @@ const Image = styled.Image`
   width: 100px;
   height: 160px;
   border-radius: 4px;
+  background-color: ${({ theme }) => theme.inactive};
 `;
 
 export default Poster;
