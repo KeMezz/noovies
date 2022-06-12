@@ -44,7 +44,7 @@ function HMedia({
 }
 
 const Container = styled.View`
-  padding: 0 24px;
+  padding: 0 18px;
   flex-direction: row;
   flex: 1;
 `;
