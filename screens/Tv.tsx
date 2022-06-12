@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useQuery, useQueryClient } from "react-query";
 import { TvApi } from "../utils/api";
 import Loader from "../components/Loader";
@@ -6,28 +6,28 @@ import { RefreshControl, ScrollView } from "react-native";
 import HFlatList from "../components/HFlatList";
 
 function Tv() {
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: trendingRefetching,
-  } = useQuery(["tv", "trending"], TvApi.trending);
-  const {
-    isLoading: airingTodayLoading,
-    data: airingTodayData,
-    isRefetching: airingTodayRefetching,
-  } = useQuery(["tv", "airingToday"], TvApi.airingToday);
-  const {
-    isLoading: topRatedLoading,
-    data: topRatedData,
-    isRefetching: topRatedRefetching,
-  } = useQuery(["tv", "topRated"], TvApi.topRated);
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    ["tv", "trending"],
+    TvApi.trending
+  );
+  const { isLoading: airingTodayLoading, data: airingTodayData } = useQuery(
+    ["tv", "airingToday"],
+    TvApi.airingToday
+  );
+  const { isLoading: topRatedLoading, data: topRatedData } = useQuery(
+    ["tv", "topRated"],
+    TvApi.topRated
+  );
 
   const queryClient = useQueryClient();
-  const onRefresh = () => queryClient.refetchQueries(["tv"]);
+  const onRefresh = () => {
+    setRefreshing(true);
+    queryClient.refetchQueries(["tv"]);
+    setRefreshing(false);
+  };
 
+  const [refreshing, setRefreshing] = useState(false);
   const loading = trendingLoading || airingTodayLoading || topRatedLoading;
-  const refreshing =
-    trendingRefetching || airingTodayRefetching || topRatedRefetching;
 
   if (loading) {
     return <Loader />;
