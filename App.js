@@ -9,8 +9,11 @@ import Root from "./navigation/Root";
 import { useColorScheme } from "react-native";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./styles/styled";
+import { QueryClient, QueryClientProvider } from "react-query";
 
 export default function App() {
+  const queryClient = new QueryClient();
+
   const [appIsReady, setAppIsReady] = useState(false);
   const isDark = useColorScheme() === "dark";
   useEffect(() => {
@@ -37,11 +40,13 @@ export default function App() {
     return null;
   } else {
     return (
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <NavigationContainer onReady={onLayoutRootView}>
-          <Root />
-        </NavigationContainer>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <NavigationContainer onReady={onLayoutRootView}>
+            <Root />
+          </NavigationContainer>
+        </ThemeProvider>
+      </QueryClientProvider>
     );
   }
 }
