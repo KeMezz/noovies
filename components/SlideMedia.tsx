@@ -1,7 +1,11 @@
 import React from "react";
 import styled from "styled-components/native";
 import { BlurView } from "expo-blur";
-import { StyleSheet, useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  TouchableWithoutFeedback,
+  useColorScheme,
+} from "react-native";
 import { makeImagePath } from "../utils/makeImagePath";
 import Poster from "./Poster";
 import Votes from "./Votes";
@@ -26,10 +30,13 @@ function SlideMedia({
 }: SlideMediaProps) {
   const isDark = useColorScheme() === "dark";
   const { navigate } = useNavigation();
-  const goToDetail = () => navigate("Stack", { screen: "Detail" });
+  const goToDetail = () => {
+    //@ts-ignore
+    navigate("Stack", { screen: "Detail", params: { originalTitle } });
+  };
   return (
-    <Container onPress={goToDetail}>
-      <>
+    <TouchableWithoutFeedback onPress={goToDetail}>
+      <Container>
         <BgImg source={{ uri: makeImagePath(backdropPath) }} />
         <BlurView
           tint={isDark ? "dark" : "light"}
@@ -51,12 +58,12 @@ function SlideMedia({
             <Poster posterPath={posterPath} />
           </SwiperMovie>
         </BlurView>
-      </>
-    </Container>
+      </Container>
+    </TouchableWithoutFeedback>
   );
 }
 
-const Container = styled.TouchableWithoutFeedback`
+const Container = styled.View`
   flex: 1;
 `;
 const BgImg = styled.Image`

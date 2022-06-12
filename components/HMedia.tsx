@@ -22,7 +22,10 @@ function HMedia({
   voteAverage,
 }: HMedia) {
   const { navigate } = useNavigation();
-  const goToDetail = () => navigate("Stack", { screen: "Detail" });
+  const goToDetail = () => {
+    //@ts-ignore
+    navigate("Stack", { screen: "Detail", params: { title } });
+  };
   return (
     <Container onPress={goToDetail}>
       <Poster posterPath={posterPath} />
