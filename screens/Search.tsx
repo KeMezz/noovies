@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import styled from "styled-components/native";
 import HFlatList from "../components/HFlatList";
 import Loader from "../components/Loader";
-import { moviesApi, TvApi } from "../utils/api";
+import { moviesApi, tvApi } from "../utils/api";
 
 function Search() {
   const [query, setQuery] = useState("");
@@ -18,7 +18,7 @@ function Search() {
     isLoading: tvLoading,
     data: tvData,
     refetch: searchTv,
-  } = useQuery(["searchTv", query], TvApi.search, {
+  } = useQuery(["searchTv", query], tvApi.search, {
     enabled: false,
   });
 

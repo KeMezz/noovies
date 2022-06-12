@@ -52,9 +52,15 @@ export const moviesApi = {
       `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${query}`
     ).then((res) => res.json());
   },
+  detail: ({ queryKey }: { queryKey: string[] }) => {
+    const [, id] = queryKey;
+    return fetch(
+      `${BASE_URL}/movie/${id}?api_key=${API_KEY}&append_to_response=videos,images`
+    ).then((res) => res.json());
+  },
 };
 
-export const TvApi = {
+export const tvApi = {
   trending: () =>
     fetch(`${BASE_URL}/trending/tv/week?api_key=${API_KEY}`).then((res) =>
       res.json()
@@ -71,6 +77,12 @@ export const TvApi = {
     const [, query] = queryKey;
     return fetch(
       `${BASE_URL}/search/tv?api_key=${API_KEY}&query=${query}`
+    ).then((res) => res.json());
+  },
+  detail: ({ queryKey }: { queryKey: string[] }) => {
+    const [, id] = queryKey;
+    return fetch(
+      `${BASE_URL}/tv/${id}?api_key=${API_KEY}&append_to_response=videos,images`
     ).then((res) => res.json());
   },
 };

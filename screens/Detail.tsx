@@ -3,10 +3,11 @@ import React, { useEffect } from "react";
 import { Dimensions, StyleSheet, useColorScheme } from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
-import { iMedia } from "../utils/api";
+import { iMedia, moviesApi, tvApi } from "../utils/api";
 import { makeImagePath } from "../utils/makeImagePath";
 import { LinearGradient } from "expo-linear-gradient";
 import { BLACK_COLOR, WHITE_COLOR } from "../styles/colors";
+import { useQuery } from "react-query";
 
 type RootStackParamList = {
   Detail: iMedia;
@@ -19,10 +20,23 @@ function Detail({
   route: { params },
 }: NativeStackScreenProps<RootStackParamList, "Detail">) {
   const isDark = useColorScheme() === "dark";
+
+  const { isLoading: moviesLoading, data: moviesData } = useQuery(
+    ["movies", params.id + ""],
+    moviesApi.detail,
+    { enabled: "title" in params }
+  );
+  const { isLoading: tvLoading, data: tvData } = useQuery(
+    ["tv", params.id + ""],
+    tvApi.detail,
+    { enabled: "name" in params }
+  );
+
   useEffect(
     () => setOptions({ title: "title" in params ? "Movie" : "TV Show" }),
     []
   );
+
   return (
     <Container>
       <Header>
@@ -31,7 +45,6 @@ function Detail({
           source={{ uri: makeImagePath(params.backdrop_path || "", "w500") }}
         />
         <LinearGradient
-          // Background Linear Gradient
           colors={["transparent", isDark ? BLACK_COLOR : WHITE_COLOR]}
           style={StyleSheet.absoluteFill}
         />
