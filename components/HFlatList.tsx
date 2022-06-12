@@ -24,7 +24,7 @@ function HFlatList({ title, data }: HFlatListProps) {
       <FlatList
         horizontal
         keyExtractor={(item) => item.id + ""}
-        data={data.results}
+        data={data?.results}
         renderItem={({ item }) => (
           <VMedia
             posterPath={item.poster_path}

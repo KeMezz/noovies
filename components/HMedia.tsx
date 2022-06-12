@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
 import Poster from "./Poster";
@@ -20,8 +21,10 @@ function HMedia({
   voteCount,
   voteAverage,
 }: HMedia) {
+  const { navigate } = useNavigation();
+  const goToDetail = () => navigate("Stack", { screen: "Detail" });
   return (
-    <Container>
+    <Container onPress={goToDetail}>
       <Poster posterPath={posterPath} />
       <MovieInfo>
         <UpcomingTitle numberOfLines={2}>{title}</UpcomingTitle>
@@ -43,7 +46,7 @@ function HMedia({
   );
 }
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   padding: 0 18px;
   flex-direction: row;
   flex: 1;

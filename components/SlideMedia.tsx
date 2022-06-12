@@ -5,6 +5,7 @@ import { StyleSheet, useColorScheme } from "react-native";
 import { makeImagePath } from "../utils/makeImagePath";
 import Poster from "./Poster";
 import Votes from "./Votes";
+import { useNavigation } from "@react-navigation/native";
 
 interface SlideMediaProps {
   backdropPath: string;
@@ -24,34 +25,38 @@ function SlideMedia({
   posterPath,
 }: SlideMediaProps) {
   const isDark = useColorScheme() === "dark";
+  const { navigate } = useNavigation();
+  const goToDetail = () => navigate("Stack", { screen: "Detail" });
   return (
-    <Container>
-      <BgImg source={{ uri: makeImagePath(backdropPath) }} />
-      <BlurView
-        tint={isDark ? "dark" : "light"}
-        intensity={50}
-        style={StyleSheet.absoluteFill}
-      >
-        <SwiperMovie>
-          <MovieInfo>
-            <Title numberOfLines={1}>{originalTitle}</Title>
-            {overview ? (
-              <Overview numberOfLines={4}>{overview}</Overview>
-            ) : null}
-            <Votes
-              voteCount={voteCount}
-              voteAverage={voteAverage}
-              marginTop="8px"
-            />
-          </MovieInfo>
-          <Poster posterPath={posterPath} />
-        </SwiperMovie>
-      </BlurView>
+    <Container onPress={goToDetail}>
+      <>
+        <BgImg source={{ uri: makeImagePath(backdropPath) }} />
+        <BlurView
+          tint={isDark ? "dark" : "light"}
+          intensity={50}
+          style={StyleSheet.absoluteFill}
+        >
+          <SwiperMovie>
+            <MovieInfo>
+              <Title numberOfLines={1}>{originalTitle}</Title>
+              {overview ? (
+                <Overview numberOfLines={4}>{overview}</Overview>
+              ) : null}
+              <Votes
+                voteCount={voteCount}
+                voteAverage={voteAverage}
+                marginTop="8px"
+              />
+            </MovieInfo>
+            <Poster posterPath={posterPath} />
+          </SwiperMovie>
+        </BlurView>
+      </>
     </Container>
   );
 }
 
-const Container = styled.View`
+const Container = styled.TouchableWithoutFeedback`
   flex: 1;
 `;
 const BgImg = styled.Image`
