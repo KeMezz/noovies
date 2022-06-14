@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet, useColorScheme } from "react-native";
+import { Dimensions, StyleSheet, useColorScheme, Linking } from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
 import { iMedia, moviesApi, tvApi } from "../utils/api";
@@ -8,6 +8,8 @@ import { makeImagePath } from "../utils/makeImagePath";
 import { LinearGradient } from "expo-linear-gradient";
 import { BLACK_COLOR, WHITE_COLOR } from "../styles/colors";
 import { useQuery } from "react-query";
+import { Ionicons } from "@expo/vector-icons";
+import Loader from "../components/Loader";
 
 type RootStackParamList = {
   Detail: iMedia;
@@ -20,17 +22,16 @@ function Detail({
   route: { params },
 }: NativeStackScreenProps<RootStackParamList, "Detail">) {
   const isDark = useColorScheme() === "dark";
+  const isMovie = "title" in params;
+  const { isLoading, data } = useQuery(
+    [isMovie ? "movies" : "tv", params.id + ""],
+    isMovie ? moviesApi.detail : tvApi.detail
+  );
 
-  const { isLoading: moviesLoading, data: moviesData } = useQuery(
-    ["movies", params.id + ""],
-    moviesApi.detail,
-    { enabled: "title" in params }
-  );
-  const { isLoading: tvLoading, data: tvData } = useQuery(
-    ["tv", params.id + ""],
-    tvApi.detail,
-    { enabled: "name" in params }
-  );
+  const openYouTubeLink = async (videoId: string) => {
+    const baseURL = `http://m.youtube.com/watch?v=${videoId}`;
+    await Linking.openURL(baseURL);
+  };
 
   useEffect(
     () => setOptions({ title: "title" in params ? "Movie" : "TV Show" }),
@@ -56,6 +57,20 @@ function Detail({
         </Column>
       </Header>
       <Overview>{params.overview}</Overview>
+      {isLoading ? <Loader /> : null}
+      <VideoInfo>
+        {data?.videos.results.map((video) => (
+          <VideoBtn key={video.key} onPress={() => openYouTubeLink(video.key)}>
+            <Ionicons
+              name="logo-youtube"
+              size={16}
+              style={{ marginTop: 12 }}
+              color="crimson"
+            />
+            <VideoTitle>{video.name}</VideoTitle>
+          </VideoBtn>
+        ))}
+      </VideoInfo>
     </Container>
   );
 }
@@ -85,6 +100,20 @@ const Title = styled.Text`
 const Overview = styled.Text`
   padding: 24px;
   color: ${(props) => props.theme.textColor};
+`;
+const VideoInfo = styled.View`
+  padding: 0 24px;
+  margin-bottom: 24px;
+`;
+const VideoBtn = styled.TouchableOpacity`
+  flex-direction: row;
+  align-items: center;
+`;
+const VideoTitle = styled.Text`
+  margin-top: 12px;
+  color: #0984e3;
+  margin-left: 6px;
+  font-size: 16px;
 `;
 
 export default Detail;
