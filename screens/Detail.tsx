@@ -1,6 +1,14 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet, useColorScheme, Linking } from "react-native";
+import {
+  Dimensions,
+  StyleSheet,
+  useColorScheme,
+  Linking,
+  TouchableOpacity,
+  Share,
+  Platform,
+} from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
 import { iMedia, moviesApi, tvApi } from "../utils/api";
@@ -28,15 +36,53 @@ function Detail({
     isMovie ? moviesApi.detail : tvApi.detail
   );
 
+  const ShareButton = () => (
+    <TouchableOpacity>
+      <Ionicons
+        name="share-outline"
+        size={24}
+        color={isDark ? WHITE_COLOR : BLACK_COLOR}
+        onPress={shareMeida}
+      />
+    </TouchableOpacity>
+  );
+
   const openYouTubeLink = async (videoId: string) => {
     const baseURL = `http://m.youtube.com/watch?v=${videoId}`;
     await Linking.openURL(baseURL);
   };
+  const shareMeida = async () => {
+    const isAndroid = Platform.OS === "android";
+    const homepage = isMovie
+      ? `https://www.imdb.com/title/${data.imdb_id}`
+      : data.homepage;
+    if (isAndroid) {
+      await Share.share({
+        message: homepage,
+      });
+    } else {
+      await Share.share({
+        url: homepage,
+      });
+    }
+  };
 
   useEffect(
-    () => setOptions({ title: "title" in params ? "Movie" : "TV Show" }),
+    () =>
+      setOptions({
+        title: "title" in params ? "Movie" : "TV Show",
+        headerRight: () => <ShareButton />,
+      }),
     []
   );
+
+  useEffect(() => {
+    if (data) {
+      setOptions({
+        headerRight: () => <ShareButton />,
+      });
+    }
+  }, [data]);
 
   return (
     <Container>
@@ -59,7 +105,7 @@ function Detail({
       <Overview>{params.overview}</Overview>
       {isLoading ? <Loader /> : null}
       <VideoInfo>
-        {data?.videos.results.map((video) => (
+        {data?.videos.results.map((video: { key: string; name: string }) => (
           <VideoBtn key={video.key} onPress={() => openYouTubeLink(video.key)}>
             <Ionicons
               name="logo-youtube"
