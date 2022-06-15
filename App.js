@@ -10,6 +10,7 @@ import { useColorScheme } from "react-native";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./styles/styled";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { StatusBar } from "react-native";
 
 export default function App() {
   const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ export default function App() {
         <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
           <NavigationContainer onReady={onLayoutRootView}>
             <Root />
+            <StatusBar barStyle={isDark ? "light-content" : "dark-content"} />
           </NavigationContainer>
         </ThemeProvider>
       </QueryClientProvider>

@@ -3,7 +3,7 @@ import Swiper from "react-native-swiper";
 import { Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
-import { MediaResponse, moviesApi } from "../utils/api";
+import { iMedia, MediaResponse, moviesApi } from "../utils/api";
 import Loader from "../components/Loader";
 import SlideMedia from "../components/SlideMedia";
 import HFlatList, { ListTitle } from "../components/HFlatList";
@@ -11,6 +11,13 @@ import HMedia from "../components/HMedia";
 import VSeparator from "../components/VSeparator";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+
+interface iPages {
+  page: number;
+  results: iMedia[];
+  total_pages: number;
+  total_results: number;
+}
 
 function Movies({
   navigation: { navigate },
@@ -25,12 +32,12 @@ function Movies({
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery(["movies", "upcoming"], moviesApi.upcoming, {
-    getNextPageParam: (currentPage) => {
+    getNextPageParam: (currentPage: iPages) => {
       const nextPage = currentPage.page + 1;
       return nextPage > currentPage.total_pages ? null : nextPage;
     },
   });
-  console.log(upcomingData);
+
   const queryClient = useQueryClient();
   const onRefresh = async () => {
     setRefreshing(true);
