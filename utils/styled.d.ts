@@ -6,5 +6,6 @@ declare module "styled-components" {
     textColor: string;
     pointColor: string;
     inactive: string;
+    link: string;
   }
 }

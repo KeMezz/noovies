@@ -157,7 +157,7 @@ const VideoBtn = styled.TouchableOpacity`
 `;
 const VideoTitle = styled.Text`
   margin-top: 12px;
-  color: #0984e3;
+  color: ${(props) => props.theme.link};
   margin-left: 6px;
   font-size: 16px;
 `;
