@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Swiper from "react-native-swiper";
 import { Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useQuery, useQueryClient } from "react-query";
+import { useInfiniteQuery, useQuery, useQueryClient } from "react-query";
 import { MediaResponse, moviesApi } from "../utils/api";
 import Loader from "../components/Loader";
 import SlideMedia from "../components/SlideMedia";
@@ -19,14 +19,84 @@ function Movies({
     useQuery<MediaResponse>(["movies", "nowPlaying"], moviesApi.nowPlaying);
   const { isLoading: trendingLoading, data: trendingData } =
     useQuery<MediaResponse>(["movies", "trending"], moviesApi.trending);
-  const { isLoading: upcomingLoading, data: upcomingData } =
-    useQuery<MediaResponse>(["movies", "upcoming"], moviesApi.upcoming);
-
+  const {
+    isLoading: upcomingLoading,
+    data: upcomingData,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery(["movies", "upcoming"], moviesApi.upcoming, {
+    getNextPageParam: (currentPage) => {
+      const nextPage = currentPage.page + 1;
+      return nextPage > currentPage.total_pages ? null : nextPage;
+    },
+  });
+  console.log(upcomingData);
   const queryClient = useQueryClient();
   const onRefresh = async () => {
     setRefreshing(true);
     await queryClient.refetchQueries(["movies"]);
     setRefreshing(false);
+  };
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    } else return;
+  };
+
+  const a = {
+    pageParams: [undefined, 2, 3, 4, 5, 6, 7],
+    pages: [
+      {
+        dates: [Object],
+        page: 1,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+      {
+        dates: [Object],
+        page: 2,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+      {
+        dates: [Object],
+        page: 3,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+      {
+        dates: [Object],
+        page: 4,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+      {
+        dates: [Object],
+        page: 5,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+      {
+        dates: [Object],
+        page: 6,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+      {
+        dates: [Object],
+        page: 7,
+        results: [Array],
+        total_pages: 23,
+        total_results: 451,
+      },
+    ],
   };
 
   const [refreshing, setRefreshing] = useState(false);
@@ -74,12 +144,14 @@ function Movies({
           fullData={item}
         />
       )}
-      data={upcomingData.results}
+      data={upcomingData?.pages?.map((page) => page.results).flat()}
       onRefresh={onRefresh}
       refreshing={refreshing}
       keyExtractor={(item) => item.id + ""}
       ItemSeparatorComponent={VSeparator}
       contentContainerStyle={{ paddingBottom: 24 }}
+      onEndReached={loadMore}
+      onEndReachedThreshold={0.4}
     />
   ) : null;
 }
