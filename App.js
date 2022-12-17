@@ -9,6 +9,7 @@ import {
   DefaultTheme,
   DarkTheme,
 } from "@react-navigation/native";
+import Stack from "./navigation/Stack";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,7 +43,8 @@ export default function App() {
       onReady={onLayoutRootView}
       theme={isDark ? DarkTheme : DefaultTheme}
     >
-      <Tabs />
+      <Stack />
+      {/* <Tabs /> */}
     </NavigationContainer>
   );
 }
