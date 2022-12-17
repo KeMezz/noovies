@@ -2,11 +2,18 @@ import React, { useCallback, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import { MaterialIcons } from "@expo/vector-icons";
-import { Text, View } from "react-native";
+import { useColorScheme } from "react-native";
+import Tabs from "./navigation/Tabs";
+import {
+  NavigationContainer,
+  DefaultTheme,
+  DarkTheme,
+} from "@react-navigation/native";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const isDark = useColorScheme() === "dark";
   const [appIsReady, setAppIsReady] = useState(false);
   useEffect(() => {
     async function prepare() {
@@ -31,12 +38,11 @@ export default function App() {
     return null;
   }
   return (
-    <View
-      style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-      onLayout={onLayoutRootView}
+    <NavigationContainer
+      onReady={onLayoutRootView}
+      theme={isDark ? DarkTheme : DefaultTheme}
     >
-      <Text>I AM READY!!!</Text>
-      <MaterialIcons name="check" size={30} />
-    </View>
+      <Tabs />
+    </NavigationContainer>
   );
 }
