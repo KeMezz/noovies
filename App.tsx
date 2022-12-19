@@ -11,6 +11,7 @@ import {
 import Root from "./navigation/Root";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./styles/theme";
+import { StatusBar } from "expo-status-bar";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,7 +22,7 @@ export default function App() {
     async function prepare() {
       try {
         await Font.loadAsync(MaterialIcons.font);
-      } catch {
+      } catch (e) {
         console.warn(e);
       } finally {
         setAppIsReady(true);
@@ -34,7 +35,7 @@ export default function App() {
     if (appIsReady) {
       await SplashScreen.hideAsync();
     }
-  });
+  }, [appIsReady]);
 
   if (!appIsReady) {
     return null;
@@ -46,6 +47,7 @@ export default function App() {
           theme={isDark ? DarkTheme : DefaultTheme}
         >
           <Root />
+          <StatusBar style="auto" />
         </NavigationContainer>
       </ThemeProvider>
     );
