@@ -1,11 +1,13 @@
 import React from "react";
 import styled from "styled-components/native";
 import Poster from "./Poster";
+import Votes from "./Votes";
 
 interface HMeidaProps {
   posterPath: string;
   originalTitle: string;
-  releaseDate: string;
+  releaseDate?: string;
+  voteAverage?: number;
   overview: string;
 }
 
@@ -13,6 +15,7 @@ const HMedia: React.FC<HMeidaProps> = ({
   posterPath,
   originalTitle,
   releaseDate,
+  voteAverage,
   overview,
 }) => {
   return (
@@ -20,13 +23,16 @@ const HMedia: React.FC<HMeidaProps> = ({
       <Poster path={posterPath} />
       <HColumn>
         <HTitle>{originalTitle}</HTitle>
-        <ReleaseDate>
-          {new Date(releaseDate).toLocaleDateString("ko", {
-            year: "2-digit",
-            month: "long",
-            day: "numeric",
-          })}
-        </ReleaseDate>
+        {releaseDate ? (
+          <ReleaseDate>
+            {new Date(releaseDate).toLocaleDateString("ko", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </ReleaseDate>
+        ) : null}
+        {voteAverage ? <Votes voteAverage={voteAverage} /> : null}
         {overview ? <HOverview numberOfLines={4}>{overview}</HOverview> : null}
       </HColumn>
     </Container>

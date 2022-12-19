@@ -4,8 +4,6 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
-import Poster from "../components/Poster";
-import Votes from "../components/Votes";
 import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
 
