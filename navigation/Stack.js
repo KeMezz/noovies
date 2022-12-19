@@ -1,6 +1,6 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 const ScreenOne = ({ navigation: { navigate } }) => (
   <TouchableOpacity onPress={() => navigate("Two")}>
@@ -12,9 +12,9 @@ const ScreenTwo = ({ navigation: { navigate } }) => (
     <Text>Screen Two!</Text>
   </TouchableOpacity>
 );
-const ScreenThree = ({ navigation: { navigate } }) => (
-  <TouchableOpacity onPress={() => navigate("Two")}>
-    <Text>Back Two!</Text>
+const ScreenThree = ({ navigation: { goBack } }) => (
+  <TouchableOpacity onPress={() => goBack()}>
+    <Text>Go Back</Text>
   </TouchableOpacity>
 );
 
