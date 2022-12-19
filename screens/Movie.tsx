@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, ScrollView } from "react-native";
+import { ActivityIndicator, Dimensions, RefreshControl } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import Poster from "../components/Poster";
 import Votes from "../components/Votes";
+import VMedia from "../components/VMedia";
+import HMedia from "../components/HMedia";
 
 const API_KEY = "aa9053913fbf30c4ec2f4307ecba00f7";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -16,6 +18,8 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
   navigation: { navigate },
 }) => {
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
   const [nowPlaying, setNowPlaying] = useState([]);
   const [upcoming, setUpcoming] = useState([]);
   const [trending, setTrending] = useState([]);
@@ -46,8 +50,12 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
     await Promise.all([getNowPlaying(), getUpcoming(), getTrending()]);
     setLoading(false);
   };
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await getData();
+    setRefreshing(false);
+  };
 
-  // get movie datas
   useEffect(() => {
     getData();
   }, []);
@@ -57,7 +65,11 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
       <ActivityIndicator />
     </Loader>
   ) : (
-    <Container>
+    <Container
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       <Swiper
         loop
         autoplay
@@ -84,34 +96,24 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
         contentContainerStyle={{ paddingHorizontal: 24 }}
       >
         {trending.map((movie) => (
-          <VMovie key={movie.id}>
-            <Poster path={movie.poster_path} />
-            <Title numberOfLines={1}>{movie.original_title}</Title>
-            <Votes voteAverage={movie.vote_average} />
-          </VMovie>
+          <VMedia
+            key={movie.id}
+            posterPath={movie.poster_path}
+            originalTitle={movie.original_title}
+            voteAverage={movie.vote_average}
+          />
         ))}
       </TrendingScroll>
       <ListTitle>Coming Soon</ListTitle>
       {upcoming.map((movie) => (
-        <HMovie key={movie.id}>
-          <Poster path={movie.poster_path} />
-          <HColumn>
-            <HTitle>{movie.original_title}</HTitle>
-            <ReleaseDate>
-              {new Date(movie.release_date).toLocaleDateString("ko", {
-                year: "2-digit",
-                month: "long",
-                day: "numeric",
-              })}{" "}
-              개봉
-            </ReleaseDate>
-            {movie.overview ? (
-              <HOverview numberOfLines={4}>{movie.overview}</HOverview>
-            ) : null}
-          </HColumn>
-        </HMovie>
+        <HMedia
+          key={movie.id}
+          posterPath={movie.poster_path}
+          originalTitle={movie.original_title}
+          releaseDate={movie.release_date}
+          overview={movie.overview}
+        />
       ))}
-      <UpcomingScroll></UpcomingScroll>
     </Container>
   );
 };
@@ -130,39 +132,5 @@ const ListTitle = styled.Text`
   color: ${({ theme }) => theme.textColor};
 `;
 const TrendingScroll = styled.ScrollView``;
-const VMovie = styled.View`
-  margin-right: 12px;
-  align-items: center;
-`;
-const Title = styled.Text`
-  max-width: 100px;
-  color: ${({ theme }) => theme.textColor};
-  margin-top: 8px;
-`;
-
-const UpcomingScroll = styled.ScrollView``;
-const HMovie = styled.View`
-  flex-direction: row;
-  padding: 0 24px;
-`;
-const HColumn = styled.View`
-  width: 100%;
-  margin-left: 12px;
-  justify-content: center;
-`;
-const HTitle = styled.Text`
-  color: ${({ theme }) => theme.textColor};
-  font-weight: 600;
-`;
-const HOverview = styled.Text`
-  color: ${({ theme }) => theme.textColor};
-  width: 65%;
-  margin-top: 8px;
-  opacity: 0.8;
-  font-size: 12px;
-`;
-const ReleaseDate = styled(HOverview)`
-  opacity: 1;
-`;
 
 export default Movie;
