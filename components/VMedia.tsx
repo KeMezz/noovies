@@ -24,12 +24,12 @@ const VMedia: React.FC<VMediaProps> = ({
 };
 
 const Container = styled.View`
-  margin-right: 12px;
   align-items: center;
 `;
 const Title = styled.Text`
   max-width: 100px;
   margin-top: 8px;
+  font-weight: 600;
   color: ${({ theme }) => theme.textColor};
 `;
 

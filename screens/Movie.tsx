@@ -6,6 +6,7 @@ import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
+import VSeparator from "../components/VSeparator";
 
 const API_KEY = "aa9053913fbf30c4ec2f4307ecba00f7";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -88,20 +89,20 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
         ))}
       </Swiper>
       <ListTitle>Trending Movies</ListTitle>
-      <TrendingScroll
+      <TrendingFlatList
+        data={trending}
         horizontal
         showsHorizontalScrollIndicator={false}
+        ItemSeparatorComponent={() => <VSeparator width={18} />}
         contentContainerStyle={{ paddingHorizontal: 24 }}
-      >
-        {trending.map((movie) => (
+        renderItem={({ item }) => (
           <VMedia
-            key={movie.id}
-            posterPath={movie.poster_path}
-            originalTitle={movie.original_title}
-            voteAverage={movie.vote_average}
+            posterPath={item.poster_path}
+            originalTitle={item.original_title}
+            voteAverage={item.vote_average}
           />
-        ))}
-      </TrendingScroll>
+        )}
+      />
       <ListTitle>Coming Soon</ListTitle>
       {upcoming.map((movie) => (
         <HMedia
@@ -129,6 +130,6 @@ const ListTitle = styled.Text`
   font-weight: 600;
   color: ${({ theme }) => theme.textColor};
 `;
-const TrendingScroll = styled.ScrollView``;
+const TrendingFlatList = styled.FlatList``;
 
 export default Movie;
