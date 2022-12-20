@@ -4,7 +4,7 @@ import Poster from "./Poster";
 import Votes from "./Votes";
 
 interface HMeidaProps {
-  posterPath: string;
+  posterPath: string | null;
   originalTitle: string;
   releaseDate?: string;
   voteAverage?: number;

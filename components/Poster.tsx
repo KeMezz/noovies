@@ -3,7 +3,7 @@ import styled from "styled-components/native";
 import { makeImgPath } from "../utils/makeImgPath";
 
 interface PosterProps {
-  path: string;
+  path: string | null;
 }
 
 const Poster: React.FC<PosterProps> = ({ path }) => {

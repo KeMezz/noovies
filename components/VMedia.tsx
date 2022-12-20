@@ -4,7 +4,7 @@ import Poster from "./Poster";
 import Votes from "./Votes";
 
 interface VMediaProps {
-  posterPath: string;
+  posterPath: string | null;
   originalTitle: string;
   voteAverage: number;
 }

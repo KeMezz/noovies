@@ -7,8 +7,8 @@ import Poster from "./Poster";
 import Votes from "./Votes";
 
 interface SlideProps {
-  backdropPath: string;
-  posterPath: string;
+  backdropPath: string | null;
+  posterPath: string | null;
   originalTitle: string;
   voteAverage: number;
   overview: string;

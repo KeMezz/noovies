@@ -11,7 +11,7 @@ const Tabs = () => {
   return (
     <Tab.Navigator
       initialRouteName="Movies"
-      screenOptions={{ tabBarShowLabel: false }}
+      screenOptions={{ tabBarShowLabel: false, unmountOnBlur: true }}
     >
       <Tab.Screen
         name="Movies"
