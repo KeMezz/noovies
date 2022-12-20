@@ -1,9 +1,9 @@
 import React from "react";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Movie from "../screens/Movie";
+import Movie from "../screens/Movies";
 import Tv from "../screens/Tv";
 import Search from "../screens/Search";
 import { MaterialIcons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
 
