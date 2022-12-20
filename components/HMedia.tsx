@@ -7,6 +7,7 @@ interface HMeidaProps {
   posterPath: string | null;
   originalTitle: string;
   releaseDate?: string;
+  firstAirDate?: string;
   voteAverage?: number;
   overview: string;
 }
@@ -15,6 +16,7 @@ const HMedia: React.FC<HMeidaProps> = ({
   posterPath,
   originalTitle,
   releaseDate,
+  firstAirDate,
   voteAverage,
   overview,
 }) => {
@@ -24,13 +26,22 @@ const HMedia: React.FC<HMeidaProps> = ({
       <HColumn>
         <HTitle>{originalTitle}</HTitle>
         {releaseDate ? (
-          <ReleaseDate>
+          <DateText>
             {new Date(releaseDate).toLocaleDateString("ko", {
               year: "numeric",
               month: "long",
               day: "numeric",
             })}
-          </ReleaseDate>
+          </DateText>
+        ) : null}
+        {firstAirDate ? (
+          <DateText>
+            {new Date(firstAirDate).toLocaleDateString("ko", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </DateText>
         ) : null}
         {voteAverage ? <Votes voteAverage={voteAverage} /> : null}
         {overview ? <HOverview numberOfLines={4}>{overview}</HOverview> : null}
@@ -59,7 +70,7 @@ const HOverview = styled.Text`
   opacity: 0.8;
   font-size: 12px;
 `;
-const ReleaseDate = styled(HOverview)`
+const DateText = styled(HOverview)`
   opacity: 1;
 `;
 

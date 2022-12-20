@@ -5,19 +5,21 @@ import Votes from "./Votes";
 
 interface VMediaProps {
   posterPath: string | null;
-  originalTitle: string;
+  originalTitle?: string;
+  originalName?: string;
   voteAverage: number;
 }
 
 const VMedia: React.FC<VMediaProps> = ({
   posterPath,
   originalTitle,
+  originalName,
   voteAverage,
 }) => {
   return (
     <Container>
       <Poster path={posterPath} />
-      <Title numberOfLines={1}>{originalTitle}</Title>
+      <Title numberOfLines={1}>{originalTitle ?? originalName}</Title>
       <Votes voteAverage={voteAverage} />
     </Container>
   );

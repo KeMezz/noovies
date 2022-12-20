@@ -9,7 +9,8 @@ import Votes from "./Votes";
 interface SlideProps {
   backdropPath: string | null;
   posterPath: string | null;
-  originalTitle: string;
+  originalTitle?: string;
+  originalName?: string;
   voteAverage: number;
   overview: string;
 }
@@ -18,6 +19,7 @@ const Slide: React.FC<SlideProps> = ({
   backdropPath,
   posterPath,
   originalTitle,
+  originalName,
   voteAverage,
   overview,
 }) => {
@@ -36,7 +38,7 @@ const Slide: React.FC<SlideProps> = ({
         <Wrapper>
           <Poster path={posterPath} />
           <Column>
-            <Title>{originalTitle}</Title>
+            <Title>{originalTitle ?? originalName}</Title>
             {voteAverage ? <Votes voteAverage={voteAverage} /> : null}
             {overview ? (
               <Overview numberOfLines={4}>{overview}</Overview>
