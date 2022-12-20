@@ -7,8 +7,10 @@
   영화와 TV 프로그램 검색 앱
 </h1>
 
-![screenshot](./screenshots/screenshot_ios.png)
-![screenshot](./screenshots/screenshot_android.png)
+<div style="display: flex; justify-content: center; align-items: center; gap: 24px; margin-bottom: 24px;">
+  <img alt="ios screenshot" src="./screenshots/screenshot_ios.png" />
+  <img alt="android screenshot" src="./screenshots/screenshot_android.png" />
+</div>
 
 ## 👻 소개
 
