@@ -7,6 +7,7 @@ import Slide from "../components/Slide";
 import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
 import VSeparator from "../components/VSeparator";
+import HSeparator from "../components/HSeparator";
 
 const API_KEY = "aa9053913fbf30c4ec2f4307ecba00f7";
 const BASE_URL = "https://api.themoviedb.org/3";
@@ -65,55 +66,59 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
     </Loader>
   ) : (
     <Container
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      ListHeaderComponent={
+        <>
+          <Swiper
+            loop
+            autoplay
+            autoplayTimeout={3.5}
+            showsButtons={false}
+            showsPagination={false}
+            containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
+          >
+            {nowPlaying.map((movie) => (
+              <Slide
+                key={movie.id}
+                backdropPath={movie.backdrop_path}
+                posterPath={movie.poster_path}
+                originalTitle={movie.original_title}
+                voteAverage={movie.vote_average}
+                overview={movie.overview}
+              />
+            ))}
+          </Swiper>
+          <ListTitle>Trending Movies</ListTitle>
+          <FlatList
+            data={trending}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <VSeparator width={18} />}
+            contentContainerStyle={{ paddingHorizontal: 24 }}
+            renderItem={({ item }) => (
+              <VMedia
+                posterPath={item.poster_path}
+                originalTitle={item.original_title}
+                voteAverage={item.vote_average}
+              />
+            )}
+          />
+          <ListTitle>Coming Soon</ListTitle>
+        </>
       }
-    >
-      <Swiper
-        loop
-        autoplay
-        autoplayTimeout={3.5}
-        showsButtons={false}
-        showsPagination={false}
-        containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
-      >
-        {nowPlaying.map((movie) => (
-          <Slide
-            key={movie.id}
-            backdropPath={movie.backdrop_path}
-            posterPath={movie.poster_path}
-            originalTitle={movie.original_title}
-            voteAverage={movie.vote_average}
-            overview={movie.overview}
-          />
-        ))}
-      </Swiper>
-      <ListTitle>Trending Movies</ListTitle>
-      <TrendingFlatList
-        data={trending}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        ItemSeparatorComponent={() => <VSeparator width={18} />}
-        contentContainerStyle={{ paddingHorizontal: 24 }}
-        renderItem={({ item }) => (
-          <VMedia
-            posterPath={item.poster_path}
-            originalTitle={item.original_title}
-            voteAverage={item.vote_average}
-          />
-        )}
-      />
-      <ListTitle>Coming Soon</ListTitle>
-      {upcoming.map((movie) => (
+      data={upcoming}
+      ItemSeparatorComponent={() => <HSeparator height={18} />}
+      contentContainerStyle={{ marginBottom: 24 }}
+      renderItem={({ item }) => (
         <HMedia
-          key={movie.id}
-          posterPath={movie.poster_path}
-          originalTitle={movie.original_title}
-          releaseDate={movie.release_date}
-          overview={movie.overview}
+          posterPath={item.poster_path}
+          originalTitle={item.original_title}
+          releaseDate={item.release_date}
+          overview={item.overview}
         />
-      ))}
-    </Container>
+      )}
+      refreshing={refreshing}
+      onRefresh={onRefresh}
+    />
   );
 };
 
@@ -122,7 +127,7 @@ const Loader = styled.View`
   justify-content: center;
   align-items: center;
 `;
-const Container = styled.ScrollView``;
+const Container = styled.FlatList``;
 const ListTitle = styled.Text`
   padding: 24px;
   padding-bottom: 14px;
@@ -130,6 +135,6 @@ const ListTitle = styled.Text`
   font-weight: 600;
   color: ${({ theme }) => theme.textColor};
 `;
-const TrendingFlatList = styled.FlatList``;
+const FlatList = styled.FlatList``;
 
 export default Movie;

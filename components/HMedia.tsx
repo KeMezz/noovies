@@ -42,7 +42,6 @@ const HMedia: React.FC<HMeidaProps> = ({
 const Container = styled.View`
   flex-direction: row;
   padding: 0 24px;
-  margin-bottom: 12px;
 `;
 const HColumn = styled.View`
   width: 100%;
