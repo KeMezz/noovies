@@ -8,57 +8,46 @@ import VMedia from "../components/VMedia";
 import HMedia from "../components/HMedia";
 import VSeparator from "../components/VSeparator";
 import HSeparator from "../components/HSeparator";
-
-const API_KEY = "aa9053913fbf30c4ec2f4307ecba00f7";
-const BASE_URL = "https://api.themoviedb.org/3";
+import { useQuery } from "@tanstack/react-query";
+import { fetchMovies } from "../utils/api";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
   navigation: { navigate },
 }) => {
-  const [loading, setLoading] = useState(true);
+  const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+    ["nowPlaying"],
+    fetchMovies.nowPlaying
+  );
+  const { isLoading: trendingLoading, data: trendingData } = useQuery(
+    ["trending"],
+    fetchMovies.trending
+  );
+  const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+    ["upcoming"],
+    fetchMovies.upcoming
+  );
+
+  const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
   const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = async () => {};
 
-  const [nowPlaying, setNowPlaying] = useState([]);
-  const [upcoming, setUpcoming] = useState([]);
-  const [trending, setTrending] = useState([]);
-
-  const getNowPlaying = async () => {
-    const { results } = await (
-      await fetch(
-        `${BASE_URL}/movie/now_playing?api_key=${API_KEY}&language=ko&page=1`
-      )
-    ).json();
-    setNowPlaying(results);
-  };
-  const getUpcoming = async () => {
-    const { results } = await (
-      await fetch(
-        `${BASE_URL}/movie/upcoming?api_key=${API_KEY}&language=ko&page=1`
-      )
-    ).json();
-    setUpcoming(results);
-  };
-  const getTrending = async () => {
-    const { results } = await (
-      await fetch(`${BASE_URL}/trending/movie/week?api_key=${API_KEY}`)
-    ).json();
-    setTrending(results);
-  };
-  const getData = async () => {
-    await Promise.all([getNowPlaying(), getUpcoming(), getTrending()]);
-    setLoading(false);
-  };
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await getData();
-    setRefreshing(false);
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+  const renderVMedia = ({ item }) => (
+    <VMedia
+      posterPath={item.poster_path}
+      originalTitle={item.original_title}
+      voteAverage={item.vote_average}
+    />
+  );
+  const renderHMedia = ({ item }) => (
+    <HMedia
+      posterPath={item.poster_path}
+      originalTitle={item.original_title}
+      releaseDate={item.release_date}
+      overview={item.overview}
+    />
+  );
 
   return loading ? (
     <Loader>
@@ -76,7 +65,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
             showsPagination={false}
             containerStyle={{ width: "100%", height: SCREEN_HEIGHT / 4 }}
           >
-            {nowPlaying.map((movie) => (
+            {nowPlayingData.results.map((movie) => (
               <Slide
                 key={movie.id}
                 backdropPath={movie.backdrop_path}
@@ -89,33 +78,20 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = ({
           </Swiper>
           <ListTitle>Trending Movies</ListTitle>
           <FlatList
-            data={trending}
+            data={trendingData.results}
             horizontal
             showsHorizontalScrollIndicator={false}
             ItemSeparatorComponent={() => <VSeparator width={18} />}
             contentContainerStyle={{ paddingHorizontal: 24 }}
-            renderItem={({ item }) => (
-              <VMedia
-                posterPath={item.poster_path}
-                originalTitle={item.original_title}
-                voteAverage={item.vote_average}
-              />
-            )}
+            renderItem={renderVMedia}
           />
           <ListTitle>Coming Soon</ListTitle>
         </>
       }
-      data={upcoming}
+      data={upcomingData.results}
       ItemSeparatorComponent={() => <HSeparator height={18} />}
       contentContainerStyle={{ marginBottom: 24 }}
-      renderItem={({ item }) => (
-        <HMedia
-          posterPath={item.poster_path}
-          originalTitle={item.original_title}
-          releaseDate={item.release_date}
-          overview={item.overview}
-        />
-      )}
+      renderItem={renderHMedia}
       refreshing={refreshing}
       onRefresh={onRefresh}
     />

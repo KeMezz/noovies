@@ -12,11 +12,14 @@ import Root from "./navigation/Root";
 import { ThemeProvider } from "styled-components/native";
 import { darkTheme, lightTheme } from "./styles/theme";
 import { StatusBar } from "expo-status-bar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+  const queryClient = new QueryClient();
   const isDark = useColorScheme() === "dark";
+
   const [appIsReady, setAppIsReady] = useState(false);
   useEffect(() => {
     async function prepare() {
@@ -41,15 +44,17 @@ export default function App() {
     return null;
   } else {
     return (
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <NavigationContainer
-          onReady={onLayoutRootView}
-          theme={isDark ? DarkTheme : DefaultTheme}
-        >
-          <Root />
-          <StatusBar style="auto" />
-        </NavigationContainer>
-      </ThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <NavigationContainer
+            onReady={onLayoutRootView}
+            theme={isDark ? DarkTheme : DefaultTheme}
+          >
+            <Root />
+            <StatusBar style="auto" />
+          </NavigationContainer>
+        </ThemeProvider>
+      </QueryClientProvider>
     );
   }
 }
