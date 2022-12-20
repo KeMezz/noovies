@@ -1,5 +1,5 @@
 import React from "react";
-import { ActivityIndicator, Dimensions, FlatList } from "react-native";
+import { Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import styled from "styled-components/native";
 import Swiper from "react-native-swiper";
@@ -10,12 +10,11 @@ import VSeparator from "../components/VSeparator";
 import HSeparator from "../components/HSeparator";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchMovies, IMovie, MovieResults } from "../utils/api";
+import FullscreenLoader from "../components/FullscreenLoader";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
-  const queryClient = useQueryClient();
-
   const {
     isLoading: nowPlayingLoading,
     data: nowPlayingData,
@@ -35,6 +34,8 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
   const isRefetching =
     isRefetchingNowPlaying || isRefetchingTrending || isRefetchingUpcoming;
+
+  const queryClient = useQueryClient();
   const onRefresh = () => {
     queryClient.refetchQueries(["movies"]);
   };
@@ -56,9 +57,7 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   );
 
   return loading ? (
-    <Loader>
-      <ActivityIndicator />
-    </Loader>
+    <FullscreenLoader />
   ) : (
     <FlatList
       ListHeaderComponent={
@@ -104,11 +103,6 @@ const Movie: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   );
 };
 
-const Loader = styled.View`
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`;
 const ListTitle = styled.Text`
   padding: 24px;
   padding-bottom: 14px;
