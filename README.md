@@ -7,7 +7,8 @@
   영화와 TV 프로그램 검색 앱
 </h1>
 
-![screenshot](./screenshots/screenshot.png)
+![screenshot](./screenshots/screenshot_ios.png)
+![screenshot](./screenshots/screenshot_android.png)
 
 ## 👻 소개
 
