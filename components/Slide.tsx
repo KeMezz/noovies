@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import { BlurView } from "expo-blur";
 import React from "react";
 import { StyleSheet, useColorScheme } from "react-native";
@@ -24,8 +25,13 @@ const Slide: React.FC<SlideProps> = ({
   overview,
 }) => {
   const isDark = useColorScheme() === "dark";
+  const { navigate } = useNavigation();
+  const goToDetail = () => {
+    navigate("Stack", { screen: "Detail" });
+  };
+
   return (
-    <SlideContainer>
+    <Container onPress={goToDetail}>
       <BgImg
         style={StyleSheet.absoluteFill}
         source={{ uri: makeImgPath(backdropPath) }}
@@ -46,11 +52,11 @@ const Slide: React.FC<SlideProps> = ({
           </Column>
         </Wrapper>
       </BlurView>
-    </SlideContainer>
+    </Container>
   );
 };
 
-const SlideContainer = styled.View`
+const Container = styled.TouchableOpacity`
   flex: 1;
 `;
 const BgImg = styled.Image``;

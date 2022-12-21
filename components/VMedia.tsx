@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
 import Poster from "./Poster";
@@ -16,8 +17,12 @@ const VMedia: React.FC<VMediaProps> = ({
   originalName,
   voteAverage,
 }) => {
+  const { navigate } = useNavigation();
+  const goToDetail = () => {
+    navigate("Stack", { screen: "Detail" });
+  };
   return (
-    <Container>
+    <Container onPress={goToDetail}>
       <Poster path={posterPath} />
       <Title numberOfLines={1}>{originalTitle ?? originalName}</Title>
       <Votes voteAverage={voteAverage} />
@@ -25,7 +30,7 @@ const VMedia: React.FC<VMediaProps> = ({
   );
 };
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   align-items: center;
 `;
 const Title = styled.Text`

@@ -1,3 +1,4 @@
+import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
 import Poster from "./Poster";
@@ -20,8 +21,12 @@ const HMedia: React.FC<HMeidaProps> = ({
   voteAverage,
   overview,
 }) => {
+  const { navigate } = useNavigation();
+  const goToDetail = () => {
+    navigate("Stack", { screen: "Detail" });
+  };
   return (
-    <Container>
+    <Container onPress={goToDetail}>
       <Poster path={posterPath} />
       <HColumn>
         <HTitle>{originalTitle}</HTitle>
@@ -50,7 +55,7 @@ const HMedia: React.FC<HMeidaProps> = ({
   );
 };
 
-const Container = styled.View`
+const Container = styled.TouchableOpacity`
   flex-direction: row;
   padding: 0 24px;
 `;
