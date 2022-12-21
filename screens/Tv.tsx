@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Swiper from "react-native-swiper";
 import VMedia from "../components/VMedia";
 import FullscreenLoader from "../components/FullscreenLoader";
@@ -14,27 +14,31 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
+  const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
+
   const {
     isLoading: airingTodayLoading,
     data: airingTodayData,
     isRefetching: isRefetchingAiringToday,
-  } = useQuery<TvResults>(["airingToday", "tv"], fetchTvs.airingToday);
+  } = useQuery<TvResults>(["tv", "airingToday"], fetchTvs.airingToday);
   const {
     isLoading: topRatedLoading,
     data: topRatedData,
     isRefetching: isRefetchingTopRated,
-  } = useQuery<TvResults>(["topRated", "tv"], fetchTvs.topRated);
+  } = useQuery<TvResults>(["tv", "topRated"], fetchTvs.topRated);
   const {
     isLoading: trendingLoading,
     data: trendingData,
     isRefetching: isRefetchingTrending,
-  } = useQuery<TvResults>(["trending", "tv"], fetchTvs.trending);
-  const loading = airingTodayLoading || topRatedLoading || trendingLoading;
-  const isRefetching =
-    isRefetchingAiringToday || isRefetchingTopRated || isRefetchingTrending;
+  } = useQuery<TvResults>(["tv", "trending"], fetchTvs.trending);
 
-  const queryClient = useQueryClient();
-  const onRefresh = () => queryClient.refetchQueries(["tv"]);
+  const loading = airingTodayLoading || topRatedLoading || trendingLoading;
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await queryClient.refetchQueries(["tv"]);
+    setRefreshing(false);
+  };
 
   const renderVMedia = ({ item }: { item: ITv }) => (
     <VMedia
@@ -93,7 +97,7 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
         ItemSeparatorComponent={() => <HSeparator height={18} />}
         contentContainerStyle={{ marginBottom: 24 }}
         renderItem={renderHMedia}
-        refreshing={isRefetching}
+        refreshing={refreshing}
         onRefresh={onRefresh}
       />
     );

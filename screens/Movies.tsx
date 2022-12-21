@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Swiper from "react-native-swiper";
 import Slide from "../components/Slide";
 import VMedia from "../components/VMedia";
@@ -14,29 +14,30 @@ import { fetchMovies, IMovie, MovieResults } from "../utils/api";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
+  const queryClient = useQueryClient();
+  const [refreshing, setRefreshing] = useState(false);
+
   const {
-    isLoading: nowPlayingLoading,
+    isInitialLoading: nowPlayingLoading,
     data: nowPlayingData,
     isRefetching: isRefetchingNowPlaying,
-  } = useQuery<MovieResults>(["nowPlaying", "movies"], fetchMovies.nowPlaying);
+  } = useQuery<MovieResults>(["movies", "nowPlaying"], fetchMovies.nowPlaying);
   const {
-    isLoading: trendingLoading,
+    isInitialLoading: trendingLoading,
     data: trendingData,
     isRefetching: isRefetchingTrending,
-  } = useQuery<MovieResults>(["trending", "movies"], fetchMovies.trending);
+  } = useQuery<MovieResults>(["movies", "trending"], fetchMovies.trending);
   const {
-    isLoading: upcomingLoading,
+    isInitialLoading: upcomingLoading,
     data: upcomingData,
     isRefetching: isRefetchingUpcoming,
-  } = useQuery<MovieResults>(["upcoming", "movies"], fetchMovies.upcoming);
+  } = useQuery<MovieResults>(["movies", "upcoming"], fetchMovies.upcoming);
 
   const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
-  const isRefetching =
-    isRefetchingNowPlaying || isRefetchingTrending || isRefetchingUpcoming;
-
-  const queryClient = useQueryClient();
-  const onRefresh = () => {
-    queryClient.refetchQueries(["movies"]);
+  const onRefresh = async () => {
+    setRefreshing(true);
+    await queryClient.refetchQueries(["movies"]);
+    setRefreshing(false);
   };
 
   const renderVMedia = ({ item }: { item: IMovie }) => (
@@ -96,7 +97,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         ItemSeparatorComponent={() => <HSeparator height={18} />}
         contentContainerStyle={{ marginBottom: 24 }}
         renderItem={renderHMedia}
-        refreshing={isRefetching}
+        refreshing={refreshing}
         onRefresh={onRefresh}
       />
     );
