@@ -19,7 +19,13 @@ const VMedia: React.FC<VMediaProps> = ({
 }) => {
   const { navigate } = useNavigation();
   const goToDetail = () => {
-    navigate("Stack", { screen: "Detail" });
+    navigate("Stack", {
+      screen: "Detail",
+      params: {
+        originalTitle,
+        originalName,
+      },
+    });
   };
   return (
     <Container onPress={goToDetail}>

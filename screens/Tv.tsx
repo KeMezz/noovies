@@ -99,6 +99,7 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
         renderItem={renderHMedia}
         refreshing={refreshing}
         onRefresh={onRefresh}
+        ListFooterComponent={<HSeparator height={18} />}
       />
     );
 };

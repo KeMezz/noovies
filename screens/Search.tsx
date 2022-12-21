@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FlatList } from "react-native";
 import styled from "styled-components/native";
 import FullscreenLoader from "../components/FullscreenLoader";
+import HSeparator from "../components/HSeparator";
 import ListTitle from "../components/ListTitle";
 import VMedia from "../components/VMedia";
 import VSeparator from "../components/VSeparator";
@@ -98,6 +99,7 @@ const Search = () => {
           />
         </>
       ) : null}
+      <HSeparator height={18} />
     </Container>
   );
 };

@@ -99,6 +99,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
         renderItem={renderHMedia}
         refreshing={refreshing}
         onRefresh={onRefresh}
+        ListFooterComponent={<HSeparator height={18} />}
       />
     );
 };

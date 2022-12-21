@@ -6,7 +6,8 @@ import Votes from "./Votes";
 
 interface HMeidaProps {
   posterPath: string | null;
-  originalTitle: string;
+  originalTitle?: string;
+  originalName?: string;
   releaseDate?: string;
   firstAirDate?: string;
   voteAverage?: number;
@@ -16,6 +17,7 @@ interface HMeidaProps {
 const HMedia: React.FC<HMeidaProps> = ({
   posterPath,
   originalTitle,
+  originalName,
   releaseDate,
   firstAirDate,
   voteAverage,
@@ -23,13 +25,20 @@ const HMedia: React.FC<HMeidaProps> = ({
 }) => {
   const { navigate } = useNavigation();
   const goToDetail = () => {
-    navigate("Stack", { screen: "Detail" });
+    //@ts-ignore
+    navigate("Stack", {
+      screen: "Detail",
+      params: {
+        originalTitle,
+        originalName,
+      },
+    });
   };
   return (
     <Container onPress={goToDetail}>
       <Poster path={posterPath} />
       <HColumn>
-        <HTitle>{originalTitle}</HTitle>
+        <HTitle>{originalTitle ?? originalName}</HTitle>
         {releaseDate ? (
           <DateText>
             {new Date(releaseDate).toLocaleDateString("ko", {
