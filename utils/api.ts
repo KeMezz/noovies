@@ -66,6 +66,11 @@ export const fetchMovies = {
       `${BASE_URL}/search/movie?api_key=${API_KEY}&language=ko&page=1&query=${query}&include_adult=false`
     ).then((res) => res.json());
   },
+  detail: (id: number) => {
+    return fetch(
+      `${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=ko&append_to_response=videos,images`
+    ).then((res) => res.json());
+  },
 };
 
 export const fetchTvs = {
@@ -84,6 +89,11 @@ export const fetchTvs = {
   search: (query: string) => {
     return fetch(
       `${BASE_URL}/search/tv?api_key=${API_KEY}&language=ko&page=1&query=${query}&include_adult=false`
+    ).then((res) => res.json());
+  },
+  detail: (id: number) => {
+    return fetch(
+      `${BASE_URL}/tv/${id}?api_key=${API_KEY}&language=k&append_to_response=videos,images`
     ).then((res) => res.json());
   },
 };

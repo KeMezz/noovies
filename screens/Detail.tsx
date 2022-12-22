@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import { Dimensions, StyleSheet, useColorScheme } from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
-import { IMovie, ITv } from "../utils/api";
+import { fetchMovies, fetchTvs, IMovie, ITv } from "../utils/api";
 import { makeImgPath } from "../utils/makeImgPath";
 import { LinearGradient } from "expo-linear-gradient";
+import { useQuery } from "@tanstack/react-query";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 type RootStackParamList = {
@@ -18,6 +19,17 @@ const Detail: React.FC<
   const isDark = useColorScheme() === "dark";
   const title =
     "original_title" in params ? params.original_title : params.original_name;
+
+  const { isInitialLoading: isTvLoading, data: tvData } = useQuery(
+    ["tvDetail"],
+    () => fetchTvs.detail(params.id),
+    { enabled: "original_name" in params }
+  );
+  const { isInitialLoading: isMovieLoading, data: movieData } = useQuery(
+    ["movieDetail"],
+    () => fetchMovies.detail(params.id),
+    { enabled: "original_title" in params }
+  );
 
   useEffect(() => {
     setOptions({ title });
@@ -55,7 +67,7 @@ const Column = styled.View`
 `;
 const Background = styled.Image``;
 const Title = styled.Text`
-  width: 80%;
+  width: 70%;
   font-weight: 600;
   font-size: 20px;
   align-self: flex-end;
