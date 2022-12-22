@@ -2,12 +2,13 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import styled from "styled-components/native";
 
-interface DetailProps {
-  originalTitle?: string;
-  originalName?: string;
-}
+type RootStackParamList = {
+  Detail: { originalTitle?: string; originalName?: string };
+};
 
-const Detail: React.FC<NativeStackScreenProps<any, "Detail">> = ({
+const Detail: React.FC<
+  NativeStackScreenProps<RootStackParamList, "Detail">
+> = ({
   navigation: { setOptions },
   route: {
     params: { originalTitle, originalName },

@@ -19,6 +19,7 @@ const VMedia: React.FC<VMediaProps> = ({
 }) => {
   const { navigate } = useNavigation();
   const goToDetail = () => {
+    //@ts-ignore
     navigate("Stack", {
       screen: "Detail",
       params: {
