@@ -5,6 +5,7 @@ import styled from "styled-components/native";
 import FullscreenLoader from "../components/FullscreenLoader";
 import HSeparator from "../components/HSeparator";
 import ListTitle from "../components/ListTitle";
+import NoResults from "../components/NoResults";
 import VMedia from "../components/VMedia";
 import VSeparator from "../components/VSeparator";
 import {
@@ -76,27 +77,35 @@ const Search = () => {
       {searchMoviesResults ? (
         <>
           <ListTitle title="Movies" />
-          <FlatList
-            data={searchMoviesResults?.results}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <VSeparator width={18} />}
-            contentContainerStyle={{ paddingHorizontal: 24 }}
-            renderItem={renderMovieResults}
-          />
+          {searchMoviesResults.results.length > 0 ? (
+            <FlatList
+              data={searchMoviesResults?.results}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <VSeparator width={18} />}
+              contentContainerStyle={{ paddingHorizontal: 24 }}
+              renderItem={renderMovieResults}
+            />
+          ) : (
+            <NoResults />
+          )}
         </>
       ) : null}
       {searchTvsResults ? (
         <>
           <ListTitle title="TV Shows" />
-          <FlatList
-            data={searchTvsResults?.results}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ItemSeparatorComponent={() => <VSeparator width={18} />}
-            contentContainerStyle={{ paddingHorizontal: 24 }}
-            renderItem={renderTvResults}
-          />
+          {searchTvsResults.results.length > 0 ? (
+            <FlatList
+              data={searchTvsResults?.results}
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              ItemSeparatorComponent={() => <VSeparator width={18} />}
+              contentContainerStyle={{ paddingHorizontal: 24 }}
+              renderItem={renderTvResults}
+            />
+          ) : (
+            <NoResults />
+          )}
         </>
       ) : null}
       <HSeparator height={18} />
