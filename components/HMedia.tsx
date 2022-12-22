@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
+import { IMovie, ITv } from "../utils/api";
 import Poster from "./Poster";
 import Votes from "./Votes";
 
@@ -12,6 +13,7 @@ interface HMeidaProps {
   firstAirDate?: string;
   voteAverage?: number;
   overview: string;
+  fullData: IMovie | ITv;
 }
 
 const HMedia: React.FC<HMeidaProps> = ({
@@ -22,6 +24,7 @@ const HMedia: React.FC<HMeidaProps> = ({
   firstAirDate,
   voteAverage,
   overview,
+  fullData,
 }) => {
   const { navigate } = useNavigation();
   const goToDetail = () => {
@@ -29,8 +32,7 @@ const HMedia: React.FC<HMeidaProps> = ({
     navigate("Stack", {
       screen: "Detail",
       params: {
-        originalTitle,
-        originalName,
+        ...fullData,
       },
     });
   };

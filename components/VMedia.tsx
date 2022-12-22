@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import styled from "styled-components/native";
+import { IMovie, ITv } from "../utils/api";
 import Poster from "./Poster";
 import Votes from "./Votes";
 
@@ -9,6 +10,7 @@ interface VMediaProps {
   originalTitle?: string;
   originalName?: string;
   voteAverage: number;
+  fullData: IMovie | ITv;
 }
 
 const VMedia: React.FC<VMediaProps> = ({
@@ -16,6 +18,7 @@ const VMedia: React.FC<VMediaProps> = ({
   originalTitle,
   originalName,
   voteAverage,
+  fullData,
 }) => {
   const { navigate } = useNavigation();
   const goToDetail = () => {
@@ -23,8 +26,7 @@ const VMedia: React.FC<VMediaProps> = ({
     navigate("Stack", {
       screen: "Detail",
       params: {
-        originalTitle,
-        originalName,
+        ...fullData,
       },
     });
   };

@@ -1,31 +1,34 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 import styled from "styled-components/native";
+import Poster from "../components/Poster";
+import { IMovie, ITv } from "../utils/api";
 
 type RootStackParamList = {
-  Detail: { originalTitle?: string; originalName?: string };
+  Detail: IMovie | ITv;
 };
 
 const Detail: React.FC<
   NativeStackScreenProps<RootStackParamList, "Detail">
-> = ({
-  navigation: { setOptions },
-  route: {
-    params: { originalTitle, originalName },
-  },
-}) => {
+> = ({ navigation: { setOptions }, route: { params } }) => {
   useEffect(() => {
-    setOptions({ title: originalTitle ?? originalName });
+    setOptions({
+      title:
+        "original_title" in params
+          ? params.original_title
+          : params.original_name,
+    });
   }, []);
 
   return (
     <Container>
-      <Text>{originalTitle ?? originalName}</Text>
+      <Poster path={params.backdrop_path} />
     </Container>
   );
 };
 
 const Container = styled.ScrollView``;
+const Backdrop = styled.Image``;
 const Text = styled.Text`
   color: ${({ theme }) => theme.textColor};
 `;

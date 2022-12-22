@@ -17,21 +17,12 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
 
-  const {
-    isInitialLoading: nowPlayingLoading,
-    data: nowPlayingData,
-    isRefetching: isRefetchingNowPlaying,
-  } = useQuery<MovieResults>(["movies", "nowPlaying"], fetchMovies.nowPlaying);
-  const {
-    isInitialLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: isRefetchingTrending,
-  } = useQuery<MovieResults>(["movies", "trending"], fetchMovies.trending);
-  const {
-    isInitialLoading: upcomingLoading,
-    data: upcomingData,
-    isRefetching: isRefetchingUpcoming,
-  } = useQuery<MovieResults>(["movies", "upcoming"], fetchMovies.upcoming);
+  const { isInitialLoading: nowPlayingLoading, data: nowPlayingData } =
+    useQuery<MovieResults>(["movies", "nowPlaying"], fetchMovies.nowPlaying);
+  const { isInitialLoading: trendingLoading, data: trendingData } =
+    useQuery<MovieResults>(["movies", "trending"], fetchMovies.trending);
+  const { isInitialLoading: upcomingLoading, data: upcomingData } =
+    useQuery<MovieResults>(["movies", "upcoming"], fetchMovies.upcoming);
 
   const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
   const onRefresh = async () => {
@@ -45,6 +36,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       posterPath={item.poster_path}
       originalTitle={item.original_title}
       voteAverage={item.vote_average}
+      fullData={item}
     />
   );
   const renderHMedia = ({ item }: { item: IMovie }) => (
@@ -53,6 +45,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
       originalTitle={item.original_title}
       releaseDate={item.release_date}
       overview={item.overview}
+      fullData={item}
     />
   );
 
@@ -78,6 +71,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
                   originalTitle={movie.original_title}
                   voteAverage={movie.vote_average}
                   overview={movie.overview}
+                  fullData={movie}
                 />
               ))}
             </Swiper>

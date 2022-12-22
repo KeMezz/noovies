@@ -17,21 +17,12 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
   const queryClient = useQueryClient();
   const [refreshing, setRefreshing] = useState(false);
 
-  const {
-    isLoading: airingTodayLoading,
-    data: airingTodayData,
-    isRefetching: isRefetchingAiringToday,
-  } = useQuery<TvResults>(["tv", "airingToday"], fetchTvs.airingToday);
-  const {
-    isLoading: topRatedLoading,
-    data: topRatedData,
-    isRefetching: isRefetchingTopRated,
-  } = useQuery<TvResults>(["tv", "topRated"], fetchTvs.topRated);
-  const {
-    isLoading: trendingLoading,
-    data: trendingData,
-    isRefetching: isRefetchingTrending,
-  } = useQuery<TvResults>(["tv", "trending"], fetchTvs.trending);
+  const { isLoading: airingTodayLoading, data: airingTodayData } =
+    useQuery<TvResults>(["tv", "airingToday"], fetchTvs.airingToday);
+  const { isLoading: topRatedLoading, data: topRatedData } =
+    useQuery<TvResults>(["tv", "topRated"], fetchTvs.topRated);
+  const { isLoading: trendingLoading, data: trendingData } =
+    useQuery<TvResults>(["tv", "trending"], fetchTvs.trending);
 
   const loading = airingTodayLoading || topRatedLoading || trendingLoading;
   const onRefresh = async () => {
@@ -45,6 +36,7 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
       posterPath={item.poster_path}
       originalName={item.original_name}
       voteAverage={item.vote_average}
+      fullData={item}
     />
   );
   const renderHMedia = ({ item }: { item: ITv }) => (
@@ -53,6 +45,7 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
       originalTitle={item.original_name}
       firstAirDate={item.first_air_date}
       overview={item.overview}
+      fullData={item}
     />
   );
 
@@ -78,6 +71,7 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
                   originalName={tv.original_name}
                   voteAverage={tv.vote_average}
                   overview={tv.overview}
+                  fullData={tv}
                 />
               ))}
             </Swiper>
