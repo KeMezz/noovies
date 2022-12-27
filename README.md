@@ -22,9 +22,11 @@ IMDB에서 제공하는 API를 통해 영화 및 TV 프로그램에 대한 정�
 - react-query-v4
 - react-native-swiper
 - styled-components
+- expo-font
 - expo-status-bar
 - expo-splash-screen
 - expo-blur
+- expo-linear-gradient
 
 ## 🚀 배포
 
