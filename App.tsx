@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useColorScheme } from "react-native";
 import {
   NavigationContainer,
@@ -25,6 +25,7 @@ export default function App() {
     async function prepare() {
       try {
         await Font.loadAsync(MaterialIcons.font);
+        await Font.loadAsync(MaterialCommunityIcons.font);
       } catch (e) {
         console.warn(e);
       } finally {
