@@ -52,6 +52,7 @@ const Search = () => {
       posterPath={item.poster_path}
       originalTitle={item.original_title}
       voteAverage={item.vote_average}
+      fullData={item}
     />
   );
   const renderTvResults = ({ item }: { item: ITv }) => (
@@ -59,6 +60,7 @@ const Search = () => {
       posterPath={item.poster_path}
       originalName={item.original_name}
       voteAverage={item.vote_average}
+      fullData={item}
     />
   );
 
