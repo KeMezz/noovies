@@ -1,6 +1,13 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
-import { Dimensions, StyleSheet, useColorScheme } from "react-native";
+import {
+  Dimensions,
+  Platform,
+  Share,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
 import { fetchMovies, fetchTvs, IMovie, ITv } from "../utils/api";
@@ -33,12 +40,43 @@ const Detail: React.FC<Props> = ({
 
   const openYtLink = async (videoId: string) => {
     const baseUrl = `https://m.youtube.com/watch?v=${videoId}`;
+    // await Linking.openURL(baseUrl);
     await WebBrowser.openBrowserAsync(baseUrl);
+  };
+
+  const shareMedia = async () => {
+    const isAndroid = Platform.OS === "android";
+    const homepage = isMovie
+      ? `https://www.imdb.com/title/${data?.imdb_id}`
+      : data.homepage;
+    if (isAndroid) {
+      await Share.share({
+        title,
+        message: homepage,
+      });
+    } else {
+      await Share.share({
+        title,
+        url: homepage,
+      });
+    }
   };
 
   useEffect(() => {
     setOptions({ title });
   }, []);
+
+  useEffect(() => {
+    if (data) {
+      setOptions({ headerRight: () => <ShareBtn /> });
+    }
+  }, [data]);
+
+  const ShareBtn = () => (
+    <TouchableOpacity onPress={shareMedia}>
+      <MaterialCommunityIcons name="share" size={24} />
+    </TouchableOpacity>
+  );
 
   return (
     <Container>
