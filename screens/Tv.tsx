@@ -7,7 +7,11 @@ import Slide from "../components/Slide";
 import ListTitle from "../components/ListTitle";
 import VSeparator from "../components/VSeparator";
 import HSeparator from "../components/HSeparator";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { fetchTvs, ITv, TvResults } from "../utils/api";
 import { Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
@@ -19,16 +23,35 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
 
   const { isLoading: airingTodayLoading, data: airingTodayData } =
     useQuery<TvResults>(["tv", "airingToday"], fetchTvs.airingToday);
-  const { isLoading: topRatedLoading, data: topRatedData } =
-    useQuery<TvResults>(["tv", "topRated"], fetchTvs.topRated);
   const { isLoading: trendingLoading, data: trendingData } =
     useQuery<TvResults>(["tv", "trending"], fetchTvs.trending);
+  const {
+    isLoading: topRatedLoading,
+    data: topRatedData,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery<TvResults>(
+    ["tv", "topRated"],
+    ({ pageParam }) => fetchTvs.topRated(pageParam),
+    {
+      getNextPageParam: (lastPage) => {
+        const nextPage = lastPage.page + 1;
+        return nextPage > lastPage.total_pages ? null : nextPage;
+      },
+    }
+  );
 
   const loading = airingTodayLoading || topRatedLoading || trendingLoading;
   const onRefresh = async () => {
     setRefreshing(true);
     await queryClient.refetchQueries(["tv"]);
     setRefreshing(false);
+  };
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
   };
 
   const renderVMedia = ({ item }: { item: ITv }) => (
@@ -87,7 +110,9 @@ const Tv: React.FC<NativeStackScreenProps<any, "TV">> = () => {
             <ListTitle title="Top Rated" />
           </>
         }
-        data={topRatedData?.results}
+        data={topRatedData?.pages.map((page) => page.results).flat()}
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.75}
         ItemSeparatorComponent={() => <HSeparator height={18} />}
         contentContainerStyle={{ marginBottom: 24 }}
         renderItem={renderHMedia}

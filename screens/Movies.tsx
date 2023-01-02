@@ -7,9 +7,13 @@ import VSeparator from "../components/VSeparator";
 import HSeparator from "../components/HSeparator";
 import ListTitle from "../components/ListTitle";
 import FullscreenLoader from "../components/FullscreenLoader";
-import { Dimensions, FlatList } from "react-native";
+import { Alert, Dimensions, FlatList } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { fetchMovies, IMovie, MovieResults } from "../utils/api";
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -21,14 +25,33 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     useQuery<MovieResults>(["movies", "nowPlaying"], fetchMovies.nowPlaying);
   const { isInitialLoading: trendingLoading, data: trendingData } =
     useQuery<MovieResults>(["movies", "trending"], fetchMovies.trending);
-  const { isInitialLoading: upcomingLoading, data: upcomingData } =
-    useQuery<MovieResults>(["movies", "upcoming"], fetchMovies.upcoming);
+  const {
+    isInitialLoading: upcomingLoading,
+    data: upcomingData,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteQuery<MovieResults>(
+    ["movies", "upcoming"],
+    ({ pageParam }) => fetchMovies.upcoming(pageParam),
+    {
+      getNextPageParam: (lastPage) => {
+        const nextPage = lastPage.page + 1;
+        return nextPage > lastPage.total_pages ? null : nextPage;
+      },
+    }
+  );
 
   const loading = nowPlayingLoading || trendingLoading || upcomingLoading;
   const onRefresh = async () => {
     setRefreshing(true);
     await queryClient.refetchQueries(["movies"]);
     setRefreshing(false);
+  };
+
+  const loadMore = () => {
+    if (hasNextPage) {
+      fetchNextPage();
+    }
   };
 
   const renderVMedia = ({ item }: { item: IMovie }) => (
@@ -49,10 +72,14 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
     />
   );
 
+  console.log(upcomingData);
+
   if (loading) return <FullscreenLoader />;
   else
     return (
       <FlatList
+        onEndReached={loadMore}
+        onEndReachedThreshold={0.75}
         ListHeaderComponent={
           <>
             <Swiper
@@ -87,7 +114,7 @@ const Movies: React.FC<NativeStackScreenProps<any, "Movies">> = () => {
             <ListTitle title="Coming Soon" />
           </>
         }
-        data={upcomingData?.results}
+        data={upcomingData?.pages.map((page) => page.results).flat()}
         ItemSeparatorComponent={() => <HSeparator height={18} />}
         contentContainerStyle={{ marginBottom: 24 }}
         renderItem={renderHMedia}
