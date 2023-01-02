@@ -1,8 +1,13 @@
 import React from "react";
 import Detail from "../screens/Detail";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { IMovie, ITv } from "../utils/api";
 
-const NativeStack = createNativeStackNavigator();
+type RootStackParamList = {
+  Detail: IMovie | ITv;
+};
+
+const NativeStack = createNativeStackNavigator<RootStackParamList>();
 
 const Stack = () => {
   return (
