@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import styled from "styled-components/native";
 import Poster from "../components/Poster";
-import { fetchMovies, fetchTvs, IMovie, ITv } from "../utils/api";
+import { fetchMovies, fetchTvs, IMovie, IDetail, ITv } from "../utils/api";
 import { makeImgPath } from "../utils/makeImgPath";
 import { LinearGradient } from "expo-linear-gradient";
 import { useQuery } from "@tanstack/react-query";
@@ -97,7 +97,7 @@ const Detail: React.FC<Props> = ({
       {params.overview !== "" ? <Overview>{params.overview}</Overview> : null}
       {isInitialLoading ? <FullscreenLoader /> : null}
       <Details>
-        {data?.videos?.results?.map((video) => (
+        {data?.videos?.results?.map((video: IDetail) => (
           <VideoBtn key={video.key} onPress={() => openYtLink(video.key)}>
             <MaterialCommunityIcons name="youtube" size={20} color="crimson" />
             <BtnText numberOfLines={1}>{video.name}</BtnText>
